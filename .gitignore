@@ -1,0 +1,23 @@
+# secrets and runtime state
+*.env
+!*.env.example
+forte.env
+var/
+*.sqlite3
+
+# data: organiser videos and labels must not be published
+data/
+*.mov
+*.mp4
+*.avi
+*.mkv
+*.xlsx
+*.zip
+
+# build and caches
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+venv*/

@@ -1,0 +1,13 @@
+[Unit]
+Description=Cash Desk Review - VLM server (vLLM, OpenAI-compatible)
+After=network-online.target
+
+[Service]
+EnvironmentFile=%h/forte/forte.env
+ExecStart=%h/forte/service/deploy/run_vllm.sh
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=default.target

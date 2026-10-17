@@ -1,0 +1,12 @@
+=== q9b (Qwen3.5-9B-FP8-dynamic) 13:23:49
+q9b: VRAM 18632 MiB (vLLM + worker detector), 795s for 42 clips
+accuracy 0.643  (TP 16, FP 9, TN 11, FN 6, n=42); over 300s: 0
+timecode |err| (final) median 2.12s, mean 3.18s, <=1s 0.38, <=2s 0.44, <=3s 0.75
+=== q3vl8 (Qwen3-VL-8B-Instruct-FP8) 13:38:38
+q3vl8: VRAM 18516 MiB (vLLM + worker detector), 672s for 42 clips
+accuracy 0.595  (TP 13, FP 8, TN 12, FN 9, n=42); over 300s: 0
+timecode |err| (final) median 2.37s, mean 12.02s, <=1s 0.31, <=2s 0.38, <=3s 0.54
+=== ivid8 (InternVideo2_5_Chat_8B) 13:52:28
+ivid8: vLLM did not start: RuntimeError: INTERNAL: piece must not include null character.
+RuntimeError: INTERNAL: piece must not include null character.
+=== ivl14 (InternVL3_5-14B) 14:07:34

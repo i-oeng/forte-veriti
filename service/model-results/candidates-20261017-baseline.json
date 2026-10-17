@@ -1,0 +1,1741 @@
+{
+  "status": {
+    "phase": "evaluating",
+    "results": {
+      "q4b": {
+        "status": "complete",
+        "exit_code": 0,
+        "peak_mib": 22693,
+        "metrics": {
+          "TP": 18,
+          "FP": 7,
+          "TN": 13,
+          "FN": 4,
+          "errors": 0,
+          "n": 42,
+          "accuracy_all_jobs": 0.7380952380952381,
+          "recall_completed": 0.8181818181818182,
+          "type_hits": 14,
+          "type_evaluated": 18,
+          "max_seconds": 116.85,
+          "over_300s": 0
+        }
+      }
+    },
+    "excluded": {
+      "internvl38b": {
+        "reason": "Checkpoint weights alone exceed available physical GPU memory; no CPU offload comparison.",
+        "weights_bytes": 31923014696,
+        "gpu_total_mib": 24564
+      }
+    },
+    "pid": 48890,
+    "model": "cosmos8b",
+    "updated_utc": "2026-10-17T16:45:36Z",
+    "server_pid": 106889,
+    "completed_clips": 0,
+    "elapsed_sec": 30,
+    "peak_mib": 22649
+  },
+  "models": {
+    "q4b": {
+      "completed_jobs": 42,
+      "clips": [
+        {
+          "video": 1,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 56.78,
+          "timing": {
+            "perception": 15.8,
+            "facts": 26.6,
+            "review": 14.4
+          },
+          "windows_reviewed": 5,
+          "windows_skipped": 0,
+          "fact_samples_requested": 33,
+          "fact_samples_obtained": 33,
+          "violations": []
+        },
+        {
+          "video": 10,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 13.98,
+          "timing": {
+            "perception": 5.5,
+            "facts": 5.2,
+            "review": 3.3
+          },
+          "windows_reviewed": 2,
+          "windows_skipped": 0,
+          "fact_samples_requested": 8,
+          "fact_samples_obtained": 8,
+          "violations": []
+        },
+        {
+          "video": 11,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 55.13,
+          "timing": {
+            "perception": 4.0,
+            "facts": 37.3,
+            "review": 11.2
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 40,
+          "fact_samples_obtained": 40,
+          "violations": [
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 11.0,
+              "observation": "С 00:12.2 до 00:25.4 дверь кассы открыта, а внутри находятся люди."
+            },
+            {
+              "type": "Банковские документы или незаблокированный компьютер оставлены без присмотра (BANK_DOCUMENTS_EXPOSED)",
+              "type_id": "BANK_DOCUMENTS_EXPOSED",
+              "t": 15.97,
+              "observation": "В 00:16.4 кассир покидает рабочее место; на столе остаются: включённый компьютер с открытым рабочим окном (экран не заблокирован)."
+            }
+          ]
+        },
+        {
+          "video": 12,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 69.91,
+          "timing": {
+            "perception": 6.1,
+            "facts": 48.9,
+            "review": 13.7
+          },
+          "windows_reviewed": 7,
+          "windows_skipped": 0,
+          "fact_samples_requested": 62,
+          "fact_samples_obtained": 62,
+          "violations": [
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 27.8,
+              "observation": "С 00:25.6 до 00:42.2 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 13,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 101.46,
+          "timing": {
+            "perception": 12.7,
+            "facts": 63.1,
+            "review": 25.7
+          },
+          "windows_reviewed": 9,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": []
+        },
+        {
+          "video": 14,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 116.85,
+          "timing": {
+            "perception": 22.0,
+            "facts": 65.8,
+            "review": 29.0
+          },
+          "windows_reviewed": 15,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": []
+        },
+        {
+          "video": 15,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 57.27,
+          "timing": {
+            "perception": 3.3,
+            "facts": 40.9,
+            "review": 11.9
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 42,
+          "fact_samples_obtained": 42,
+          "violations": [
+            {
+              "type": "Деньги предыдущего клиента оставлены на столе (previous_customer_cash_left_exposed)",
+              "type_id": "previous_customer_cash_left_exposed",
+              "t": 15.4,
+              "observation": "В 00:15.4 кассир покидает рабочее место; на столе остаются: наличные деньги."
+            }
+          ]
+        },
+        {
+          "video": 16,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 55.73,
+          "timing": {
+            "perception": 3.4,
+            "facts": 44.4,
+            "review": 6.6
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 41,
+          "fact_samples_obtained": 41,
+          "violations": [
+            {
+              "type": "Личные вещи кассира в кассовом узле (PERSONAL_ITEM_IN_CASH_NODE)",
+              "type_id": "PERSONAL_ITEM_IN_CASH_NODE",
+              "t": 16.37,
+              "observation": "В 00:16.4 на кассовый стол кладут сумку или верхнюю одежду."
+            }
+          ]
+        },
+        {
+          "video": 17,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 38.51,
+          "timing": {
+            "perception": 2.6,
+            "facts": 26.3,
+            "review": 8.4
+          },
+          "windows_reviewed": 5,
+          "windows_skipped": 0,
+          "fact_samples_requested": 30,
+          "fact_samples_obtained": 30,
+          "violations": [
+            {
+              "type": "Инкассаторская сумка принята без проверки (COLLECTION_BAG_ACCEPTED_WITHOUT_INTEGRITY_CHECK)",
+              "type_id": "COLLECTION_BAG_ACCEPTED_WITHOUT_INTEGRITY_CHECK",
+              "t": 7.03,
+              "observation": "В 00:07.0 у стола передают инкассаторскую сумку, и её принимают без видимой проверки целостности сумки, пломбы и документов инкассатора."
+            }
+          ]
+        },
+        {
+          "video": 18,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 52.01,
+          "timing": {
+            "perception": 3.8,
+            "facts": 40.7,
+            "review": 5.0
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 46,
+          "fact_samples_obtained": 46,
+          "violations": [
+            {
+              "type": "Идентификация клиента не наблюдалась (customer_identification_not_observed)",
+              "type_id": "customer_identification_not_observed",
+              "t": 7.04,
+              "observation": "В 00:07.0 клиент и кассир передают друг другу наличные; до этого не видно, чтобы клиент показывал документ, удостоверяющий личность."
+            },
+            {
+              "type": "Кассовая операция доступна посторонним (collection_exposed_to_third_parties)",
+              "type_id": "collection_exposed_to_third_parties",
+              "t": 15.37,
+              "observation": "С 00:15.4 у кассового стола кроме кассира и клиента находится третий человек, который может наблюдать за кассовой операцией."
+            }
+          ]
+        },
+        {
+          "video": 19,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 85.07,
+          "timing": {
+            "perception": 7.8,
+            "facts": 54.7,
+            "review": 20.4
+          },
+          "windows_reviewed": 9,
+          "windows_skipped": 0,
+          "fact_samples_requested": 82,
+          "fact_samples_obtained": 82,
+          "violations": [
+            {
+              "type": "Идентификация клиента не наблюдалась (customer_identification_not_observed)",
+              "type_id": "customer_identification_not_observed",
+              "t": 13.8,
+              "observation": "В 00:13.8 клиент и кассир передают друг другу наличные; до этого не видно, чтобы клиент показывал документ, удостоверяющий личность."
+            },
+            {
+              "type": "Идентификация клиента не наблюдалась (customer_identification_not_observed)",
+              "type_id": "customer_identification_not_observed",
+              "t": 56.23,
+              "observation": "В 00:56.2 клиент и кассир передают друг другу наличные; до этого не видно, чтобы клиент показывал документ, удостоверяющий личность."
+            }
+          ]
+        },
+        {
+          "video": 2,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 56.38,
+          "timing": {
+            "perception": 14.4,
+            "facts": 28.6,
+            "review": 12.4
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 33,
+          "fact_samples_obtained": 33,
+          "violations": [
+            {
+              "type": "Идентификация клиента не наблюдалась (customer_identification_not_observed)",
+              "type_id": "customer_identification_not_observed",
+              "t": 15.2,
+              "observation": "В 00:15.2 клиент и кассир передают друг другу наличные; до этого не видно, чтобы клиент показывал документ, удостоверяющий личность."
+            }
+          ]
+        },
+        {
+          "video": 20,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 28.79,
+          "timing": {
+            "perception": 2.2,
+            "facts": 15.1,
+            "review": 10.3
+          },
+          "windows_reviewed": 1,
+          "windows_skipped": 0,
+          "fact_samples_requested": 16,
+          "fact_samples_obtained": 16,
+          "violations": [
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 4.4,
+              "observation": "С 00:06.0 до 00:11.4 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 21,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 34.27,
+          "timing": {
+            "perception": 3.2,
+            "facts": 22.7,
+            "review": 8.4
+          },
+          "windows_reviewed": 2,
+          "windows_skipped": 0,
+          "fact_samples_requested": 21,
+          "fact_samples_obtained": 21,
+          "violations": []
+        },
+        {
+          "video": 22,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 42.6,
+          "timing": {
+            "perception": 3.5,
+            "facts": 27.5,
+            "review": 10.4
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 26,
+          "fact_samples_obtained": 26,
+          "violations": [
+            {
+              "type": "Банковские документы или незаблокированный компьютер оставлены без присмотра (BANK_DOCUMENTS_EXPOSED)",
+              "type_id": "BANK_DOCUMENTS_EXPOSED",
+              "t": 15.17,
+              "observation": "В 00:15.2 кассир покидает рабочее место; на столе остаются: включённый компьютер с открытым рабочим окном (экран не заблокирован)."
+            }
+          ]
+        },
+        {
+          "video": 23,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 43.38,
+          "timing": {
+            "perception": 3.0,
+            "facts": 34.4,
+            "review": 6.0
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 33,
+          "fact_samples_obtained": 33,
+          "violations": []
+        },
+        {
+          "video": 24,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 39.49,
+          "timing": {
+            "perception": 2.5,
+            "facts": 29.7,
+            "review": 6.4
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 30,
+          "fact_samples_obtained": 30,
+          "violations": [
+            {
+              "type": "Деньги предыдущего клиента оставлены на столе (previous_customer_cash_left_exposed)",
+              "type_id": "previous_customer_cash_left_exposed",
+              "t": 0.8,
+              "observation": "В 00:00.8 кассир покидает рабочее место; на столе остаются: наличные деньги."
+            }
+          ]
+        },
+        {
+          "video": 25,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 61.75,
+          "timing": {
+            "perception": 7.4,
+            "facts": 40.2,
+            "review": 14.1
+          },
+          "windows_reviewed": 6,
+          "windows_skipped": 0,
+          "fact_samples_requested": 55,
+          "fact_samples_obtained": 55,
+          "violations": []
+        },
+        {
+          "video": 26,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 44.79,
+          "timing": {
+            "perception": 5.0,
+            "facts": 25.7,
+            "review": 12.9
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 40,
+          "fact_samples_obtained": 40,
+          "violations": [
+            {
+              "type": "Деньги предыдущего клиента оставлены на столе (previous_customer_cash_left_exposed)",
+              "type_id": "previous_customer_cash_left_exposed",
+              "t": 8.6,
+              "observation": "В 00:08.6 кассир покидает рабочее место; на столе остаются: наличные деньги."
+            }
+          ]
+        },
+        {
+          "video": 27,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 56.98,
+          "timing": {
+            "perception": 5.1,
+            "facts": 42.2,
+            "review": 9.7
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 45,
+          "fact_samples_obtained": 45,
+          "violations": []
+        },
+        {
+          "video": 28,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 45.91,
+          "timing": {
+            "perception": 2.9,
+            "facts": 33.3,
+            "review": 8.5
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 30,
+          "fact_samples_obtained": 30,
+          "violations": [
+            {
+              "type": "Банковские документы или незаблокированный компьютер оставлены без присмотра (BANK_DOCUMENTS_EXPOSED)",
+              "type_id": "BANK_DOCUMENTS_EXPOSED",
+              "t": 11.17,
+              "observation": "В 00:11.2 кассир покидает рабочее место; на столе остаются: включённый компьютер с открытым рабочим окном (экран не заблокирован)."
+            }
+          ]
+        },
+        {
+          "video": 29,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 39.94,
+          "timing": {
+            "perception": 3.1,
+            "facts": 31.2,
+            "review": 5.6
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 34,
+          "fact_samples_obtained": 34,
+          "violations": []
+        },
+        {
+          "video": 3,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 51.97,
+          "timing": {
+            "perception": 15.0,
+            "facts": 33.0,
+            "review": 4.0
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 38,
+          "fact_samples_obtained": 38,
+          "violations": []
+        },
+        {
+          "video": 30,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 44.25,
+          "timing": {
+            "perception": 3.0,
+            "facts": 28.9,
+            "review": 10.4
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 32,
+          "fact_samples_obtained": 32,
+          "violations": [
+            {
+              "type": "Банковские документы или незаблокированный компьютер оставлены без присмотра (BANK_DOCUMENTS_EXPOSED)",
+              "type_id": "BANK_DOCUMENTS_EXPOSED",
+              "t": 0.03,
+              "observation": "В 00:00.0 кассир покидает рабочее место; на столе остаются: включённый компьютер с открытым рабочим окном (экран не заблокирован)."
+            },
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 3.04,
+              "observation": "С 00:02.2 до 00:18.6 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 31,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 54.44,
+          "timing": {
+            "perception": 5.1,
+            "facts": 37.2,
+            "review": 10.9
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 43,
+          "fact_samples_obtained": 43,
+          "violations": [
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 18.4,
+              "observation": "С 00:17.4 до 00:23.6 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 32,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 41.65,
+          "timing": {
+            "perception": 4.9,
+            "facts": 32.7,
+            "review": 3.1
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 38,
+          "fact_samples_obtained": 38,
+          "violations": [
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 1.2,
+              "observation": "С 00:03.0 до 00:21.2 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 33,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 38.83,
+          "timing": {
+            "perception": 2.6,
+            "facts": 29.9,
+            "review": 4.3
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 29,
+          "fact_samples_obtained": 29,
+          "violations": [
+            {
+              "type": "Банковские документы или незаблокированный компьютер оставлены без присмотра (BANK_DOCUMENTS_EXPOSED)",
+              "type_id": "BANK_DOCUMENTS_EXPOSED",
+              "t": 0.03,
+              "observation": "В 00:00.0 кассир покидает рабочее место; на столе остаются: включённый компьютер с открытым рабочим окном (экран не заблокирован)."
+            },
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 4.0,
+              "observation": "С 00:02.8 до 00:14.2 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 34,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 38.4,
+          "timing": {
+            "perception": 3.0,
+            "facts": 30.9,
+            "review": 4.5
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 36,
+          "fact_samples_obtained": 36,
+          "violations": []
+        },
+        {
+          "video": 35,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 90.65,
+          "timing": {
+            "perception": 7.6,
+            "facts": 62.1,
+            "review": 20.9
+          },
+          "windows_reviewed": 7,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": []
+        },
+        {
+          "video": 37,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 36.76,
+          "timing": {
+            "perception": 2.6,
+            "facts": 27.9,
+            "review": 6.3
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 23,
+          "fact_samples_obtained": 23,
+          "violations": []
+        },
+        {
+          "video": 38,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 93.05,
+          "timing": {
+            "perception": 7.3,
+            "facts": 74.2,
+            "review": 8.9
+          },
+          "windows_reviewed": 7,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": [
+            {
+              "type": "Деньги предыдущего клиента оставлены на столе (previous_customer_cash_left_exposed)",
+              "type_id": "previous_customer_cash_left_exposed",
+              "t": 30.6,
+              "observation": "В 00:30.6 в кассу входит человек, а на столе лежат банкноты."
+            },
+            {
+              "type": "Идентификация клиента не наблюдалась (customer_identification_not_observed)",
+              "type_id": "customer_identification_not_observed",
+              "t": 42.0,
+              "observation": "В 00:42.0 клиент и кассир передают друг другу наличные; до этого не видно, чтобы клиент показывал документ, удостоверяющий личность."
+            }
+          ]
+        },
+        {
+          "video": 39,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 99.94,
+          "timing": {
+            "perception": 9.8,
+            "facts": 70.8,
+            "review": 16.9
+          },
+          "windows_reviewed": 9,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": [
+            {
+              "type": "Идентификация клиента не наблюдалась (customer_identification_not_observed)",
+              "type_id": "customer_identification_not_observed",
+              "t": 12.0,
+              "observation": "В 00:12.0 клиент и кассир передают друг другу наличные; до этого не видно, чтобы клиент показывал документ, удостоверяющий личность."
+            },
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 44.8,
+              "observation": "С 00:46.0 до 01:17.8 дверь кассы открыта, а внутри находятся люди."
+            }
+          ]
+        },
+        {
+          "video": 4,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 92.55,
+          "timing": {
+            "perception": 21.0,
+            "facts": 51.3,
+            "review": 18.9
+          },
+          "windows_reviewed": 11,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": [
+            {
+              "type": "Деньги предыдущего клиента оставлены на столе (previous_customer_cash_left_exposed)",
+              "type_id": "previous_customer_cash_left_exposed",
+              "t": 54.8,
+              "observation": "В 00:54.8 в кассу входит человек, а на столе лежат банкноты."
+            }
+          ]
+        },
+        {
+          "video": 40,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 61.16,
+          "timing": {
+            "perception": 3.8,
+            "facts": 44.3,
+            "review": 10.9
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 45,
+          "fact_samples_obtained": 45,
+          "violations": [
+            {
+              "type": "Дверь кассы оставлена открытой (cash_desk_access_door_left_unsecured)",
+              "type_id": "cash_desk_access_door_left_unsecured",
+              "t": 0.6,
+              "observation": "С 00:02.4 до 00:06.4 дверь кассы открыта, а внутри находятся люди."
+            },
+            {
+              "type": "Личные вещи кассира в кассовом узле (PERSONAL_ITEM_IN_CASH_NODE)",
+              "type_id": "PERSONAL_ITEM_IN_CASH_NODE",
+              "t": 18.37,
+              "observation": "В 00:18.4 на кассовый стол кладут сумку или верхнюю одежду."
+            }
+          ]
+        },
+        {
+          "video": 43,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 21.71,
+          "timing": {
+            "perception": 3.5,
+            "facts": 16.8,
+            "review": 1.4
+          },
+          "windows_reviewed": 2,
+          "windows_skipped": 0,
+          "fact_samples_requested": 12,
+          "fact_samples_obtained": 12,
+          "violations": []
+        },
+        {
+          "video": 44,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 21.42,
+          "timing": {
+            "perception": 3.7,
+            "facts": 11.0,
+            "review": 6.7
+          },
+          "windows_reviewed": 2,
+          "windows_skipped": 0,
+          "fact_samples_requested": 11,
+          "fact_samples_obtained": 11,
+          "violations": []
+        },
+        {
+          "video": 45,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 30.57,
+          "timing": {
+            "perception": 7.2,
+            "facts": 19.1,
+            "review": 4.3
+          },
+          "windows_reviewed": 4,
+          "windows_skipped": 0,
+          "fact_samples_requested": 26,
+          "fact_samples_obtained": 26,
+          "violations": []
+        },
+        {
+          "video": 46,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 30.67,
+          "timing": {
+            "perception": 5.1,
+            "facts": 20.2,
+            "review": 4.0
+          },
+          "windows_reviewed": 3,
+          "windows_skipped": 0,
+          "fact_samples_requested": 26,
+          "fact_samples_obtained": 26,
+          "violations": [
+            {
+              "type": "Личные вещи кассира в кассовом узле (PERSONAL_ITEM_IN_CASH_NODE)",
+              "type_id": "PERSONAL_ITEM_IN_CASH_NODE",
+              "t": 14.4,
+              "observation": "В 00:14.4 кассир ест за кассовым столом (еда на рабочем месте)."
+            }
+          ]
+        },
+        {
+          "video": 47,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 57.65,
+          "timing": {
+            "perception": 12.9,
+            "facts": 32.6,
+            "review": 10.9
+          },
+          "windows_reviewed": 11,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": [
+            {
+              "type": "Деньги предыдущего клиента оставлены на столе (previous_customer_cash_left_exposed)",
+              "type_id": "previous_customer_cash_left_exposed",
+              "t": 54.8,
+              "observation": "В 00:54.8 в кассу входит человек, а на столе лежат банкноты."
+            }
+          ]
+        },
+        {
+          "video": 48,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 57.98,
+          "timing": {
+            "perception": 13.0,
+            "facts": 34.5,
+            "review": 9.2
+          },
+          "windows_reviewed": 10,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": [
+            {
+              "type": "Смартфон с камерой в кассовом узле (PHONE_WITH_CAMERA_IN_CASH_NODE)",
+              "type_id": "PHONE_WITH_CAMERA_IN_CASH_NODE",
+              "t": 6.0,
+              "observation": "В 00:06.0 кассир пользуется смартфоном за кассовым столом."
+            }
+          ]
+        },
+        {
+          "video": 5,
+          "verdict": "violation",
+          "error": null,
+          "wall_sec": 99.49,
+          "timing": {
+            "perception": 14.0,
+            "facts": 66.0,
+            "review": 18.2
+          },
+          "windows_reviewed": 10,
+          "windows_skipped": 0,
+          "fact_samples_requested": 90,
+          "fact_samples_obtained": 90,
+          "violations": [
+            {
+              "type": "Смартфон с камерой в кассовом узле (PHONE_WITH_CAMERA_IN_CASH_NODE)",
+              "type_id": "PHONE_WITH_CAMERA_IN_CASH_NODE",
+              "t": 6.0,
+              "observation": "В 00:06.0 кассир пользуется смартфоном за кассовым столом."
+            }
+          ]
+        },
+        {
+          "video": 8,
+          "verdict": "no_violation",
+          "error": null,
+          "wall_sec": 71.34,
+          "timing": {
+            "perception": 10.2,
+            "facts": 43.0,
+            "review": 18.1
+          },
+          "windows_reviewed": 7,
+          "windows_skipped": 0,
+          "fact_samples_requested": 58,
+          "fact_samples_obtained": 58,
+          "violations": []
+        }
+      ],
+      "metrics": {
+        "TP": 18,
+        "FP": 7,
+        "TN": 13,
+        "FN": 4,
+        "errors": 0,
+        "n": 42,
+        "accuracy_all_jobs": 0.7380952380952381,
+        "recall_completed": 0.8181818181818182,
+        "type_hits": 14,
+        "type_evaluated": 18,
+        "max_seconds": 116.85,
+        "over_300s": 0
+      },
+      "median_sec": 53.224999999999994,
+      "p95_sec": 99.94,
+      "incomplete_facts": 0,
+      "skipped_review_windows": 0,
+      "open_diagnostics": [
+        {
+          "events": [
+            {
+              "name": "unauthorized_item_handling",
+              "timecode_sec": 21.38,
+              "observation": "The customer is holding a small, light-colored object in her hands while seated at the desk.",
+              "reason_for_concern": "This action warrants review because it is an unusual item for a standard customer service interaction and could indicate a security breach or unauthorized possession of an object."
+            }
+          ],
+          "video": 1,
+          "wall_sec": 1.9,
+          "window": [
+            18.0,
+            25.883333
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Cash Handling",
+              "timecode_sec": 6.07,
+              "observation": "The employee is seen handling cash on the desk.",
+              "reason_for_concern": "This action warrants review to ensure proper cash handling procedures are being followed."
+            }
+          ],
+          "video": 10,
+          "wall_sec": 1.73,
+          "window": [
+            3.7833335000000003,
+            11.783333500000001
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Door left open",
+              "timecode_sec": 14.0,
+              "observation": "The glass door to the office is left open while the employee is inside.",
+              "reason_for_concern": "Leaving a secure area unsecured creates a physical security risk."
+            }
+          ],
+          "video": 11,
+          "wall_sec": 1.71,
+          "window": [
+            14.0,
+            22.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Cashier_Leaves_Desk",
+              "timecode_sec": 22.86,
+              "observation": "The cashier stands up from her chair and begins to move away from the desk.",
+              "reason_for_concern": "This action warrants review as it may indicate the end of a transaction or a potential attempt to conceal an action, though no further evidence is present in this frame."
+            }
+          ],
+          "video": 12,
+          "wall_sec": 1.9,
+          "window": [
+            17.15,
+            25.15
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unsecured Cash Handling",
+              "timecode_sec": 43.0,
+              "observation": "A bank teller is seen holding a stack of cash in her hand while standing at the counter, rather than placing it in a secure cash drawer or handling it with a cash tuck.",
+              "reason_for_concern": "This action exposes the cash to potential theft or loss, as it is not being secured in a designated safe location."
+            }
+          ],
+          "video": 13,
+          "wall_sec": 1.67,
+          "window": [
+            43.0,
+            51.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Cash Handling",
+              "timecode_sec": 71.84,
+              "observation": "The employee is seen handling cash on the desk.",
+              "reason_for_concern": "This action warrants review to ensure proper cash handling procedures are being followed."
+            }
+          ],
+          "video": 14,
+          "wall_sec": 1.41,
+          "window": [
+            67.2665105,
+            75.2665105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unauthorized_access",
+              "timecode_sec": 11.0,
+              "observation": "A person in a pink shirt is seen standing at the cash desk, reaching towards a grey cabinet. At t=15.57s, the person turns and walks towards the glass door, opening it to enter an adjacent room.",
+              "reason_for_concern": "The individual is accessing a restricted area (the adjacent room) without being visible to the camera's primary field of view, which could indicate unauthorized movement or access to sensitive areas."
+            }
+          ],
+          "video": 15,
+          "wall_sec": 1.56,
+          "window": [
+            11.0,
+            19.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 7.37,
+              "observation": "A man in a dark jacket and green pants stands at the cash desk holding a green folder or bag, looking toward the seated employee.",
+              "reason_for_concern": "The individual is positioned at the cash desk with an object that could be used to conceal cash or documents, and is maintaining eye contact with the employee, which may indicate an attempt to bypass standard procedures."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 8.51,
+              "observation": "The man places the green folder/bag on the desk and extends his hand toward the employee.",
+              "reason_for_concern": "The action of placing the item on the desk and reaching toward the employee suggests an attempt to interact with the employee or access the cash drawer, which is outside normal customer service."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 9.65,
+              "observation": "The man continues to hold the green folder/bag while looking at the employee.",
+              "reason_for_concern": "The man is still holding the item and maintaining eye contact, which could indicate an ongoing attempt to access the cash drawer or documents."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 10.8,
+              "observation": "The man continues to hold the green folder/bag and look at the employee.",
+              "reason_for_concern": "The man is still holding the item and maintaining eye contact, which could indicate an ongoing attempt to access the cash drawer or documents."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 11.94,
+              "observation": "The man continues to hold the green folder/bag and look at the employee.",
+              "reason_for_concern": "The man is still holding the item and maintaining eye contact, which could indicate an ongoing attempt to access the cash drawer or documents."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 13.08,
+              "observation": "The man continues to hold the green folder/bag and look at the employee.",
+              "reason_for_concern": "The man is still holding the item and maintaining eye contact, which could indicate an ongoing attempt to access the cash drawer or documents."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 14.22,
+              "observation": "The man continues to hold the green folder/bag and look at the employee.",
+              "reason_for_concern": "The man is still holding the item and maintaining eye contact, which could indicate an ongoing attempt to access the cash drawer or documents."
+            },
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 15.37,
+              "observation": "The man continues to hold the green folder/bag and look at the employee.",
+              "reason_for_concern": "The man is still holding the item and maintaining eye contact, which could indicate an ongoing attempt to access the cash drawer or documents."
+            }
+          ],
+          "video": 16,
+          "wall_sec": 5.85,
+          "window": [
+            7.3665105,
+            15.3665105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unauthorized_access_attempt",
+              "timecode_sec": 7.57,
+              "observation": "A man in a dark jacket approaches the cash desk and places a green bag on the counter, reaching toward the seated employee's workspace.",
+              "reason_for_concern": "This action warrants review as it represents an attempt to access the employee's immediate workspace or cash handling area without prior authorization or established procedure."
+            }
+          ],
+          "video": 17,
+          "wall_sec": 1.89,
+          "window": [
+            3.0,
+            11.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "CARD_HANDLING",
+              "timecode_sec": 20.68,
+              "observation": "A customer hands a card to a teller.",
+              "reason_for_concern": "Standard procedure for card transactions."
+            },
+            {
+              "name": "CARD_HANDLING",
+              "timecode_sec": 21.61,
+              "observation": "A customer holds a card to their ear.",
+              "reason_for_concern": "This action is inconsistent with normal card handling and may indicate tampering or an attempt to use the card as a tool."
+            }
+          ],
+          "video": 18,
+          "wall_sec": 1.96,
+          "window": [
+            16.0,
+            22.55
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [],
+          "video": 19,
+          "wall_sec": 1.1,
+          "window": [
+            24.7165105,
+            32.7165105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Cash Handling",
+              "timecode_sec": 14.0,
+              "observation": "The teller places a stack of cash into the cash dispenser.",
+              "reason_for_concern": "This action is a standard part of the cash-handling process and does not inherently warrant review unless it is part of a larger sequence of suspicious activity."
+            }
+          ],
+          "video": 2,
+          "wall_sec": 1.83,
+          "window": [
+            6.0,
+            14.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Access",
+              "timecode_sec": 1.0,
+              "observation": "The employee opens a grey cabinet door and leaves it open while standing at the desk.",
+              "reason_for_concern": "An open cabinet door in a cash-handling area presents a security risk, as it could allow unauthorized access to stored items or cash."
+            }
+          ],
+          "video": 20,
+          "wall_sec": 1.54,
+          "window": [
+            1.0,
+            9.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unauthorized_access",
+              "timecode_sec": 12.66,
+              "observation": "The employee is seen holding a small, white, rectangular object that resembles a mobile phone or a small wallet. She is looking down at it intently while seated at the desk.",
+              "reason_for_concern": "The object's appearance and the employee's focused attention on it, while seated at the cash desk, warrants review to confirm if it is a personal device or if it is being used in a manner inconsistent with standard cash-handling procedures."
+            }
+          ],
+          "video": 21,
+          "wall_sec": 1.48,
+          "window": [
+            5.800000000000001,
+            13.8
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Handling",
+              "timecode_sec": 10.0,
+              "observation": "A person is standing at the cash desk with their back to the camera, facing a cash drawer or secure container. Their hands are not visible on the desk or in the immediate vicinity of the cash handling equipment.",
+              "reason_for_concern": "This posture and lack of visible interaction with the cash handling equipment suggests the person may be leaving the area without completing a transaction or securing the cash, which is a potential security risk."
+            }
+          ],
+          "video": 22,
+          "wall_sec": 1.25,
+          "window": [
+            10.0,
+            18.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Bypassed Cash Desk",
+              "timecode_sec": 6.28,
+              "observation": "The employee walks away from the cash desk and laptop, leaving the workstation unattended.",
+              "reason_for_concern": "Leaving a cash-handling workstation unattended is a significant security risk, as it exposes cash and sensitive systems to unauthorized access or theft."
+            }
+          ],
+          "video": 23,
+          "wall_sec": 1.82,
+          "window": [
+            5.133333500000001,
+            13.1333335
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "CashDeskLeaving",
+              "timecode_sec": 5.14,
+              "observation": "Cash desk operator stands up and walks away from the desk.",
+              "reason_for_concern": "Leaving the cash desk without securing the area or handing over duties may indicate a procedural violation or unauthorized departure."
+            }
+          ],
+          "video": 24,
+          "wall_sec": 1.52,
+          "window": [
+            4.0,
+            12.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unauthorized_access",
+              "timecode_sec": 15.28,
+              "observation": "The employee opens the door of the grey safe while holding a green object in her hand.",
+              "reason_for_concern": "Opening a safe without a visible transaction or customer interaction is an unusual action that warrants review to ensure it is not part of an unauthorized access attempt."
+            }
+          ],
+          "video": 25,
+          "wall_sec": 1.6,
+          "window": [
+            11.85,
+            19.85
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Cash Handling",
+              "timecode_sec": 8.43,
+              "observation": "A small white object, consistent with a banknote, is placed on the desk surface.",
+              "reason_for_concern": "The presence of cash on the desk surface is a standard part of the cash-handling process and does not inherently constitute a security violation. However, the subsequent action of leaving the cash on the desk while the employee leaves the room is a condition that warrants review to ensure proper procedures for securing cash are followed."
+            }
+          ],
+          "video": 26,
+          "wall_sec": 1.24,
+          "window": [
+            5.0,
+            13.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unusual Object Handling",
+              "timecode_sec": 12.65,
+              "observation": "The employee opens the front door of the grey cabinet and appears to be looking inside or reaching in.",
+              "reason_for_concern": "Opening a secure cabinet without a visible transaction or supervisor present warrants review to ensure proper access procedures are followed."
+            }
+          ],
+          "video": 27,
+          "wall_sec": 1.84,
+          "window": [
+            9.2165105,
+            17.2165105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Desk",
+              "timecode_sec": 6.43,
+              "observation": "The employee leaves the cash desk unattended while still seated at the workstation.",
+              "reason_for_concern": "Leaving a cash-handling workstation unattended creates a security risk for cash, equipment, and data."
+            }
+          ],
+          "video": 28,
+          "wall_sec": 1.6,
+          "window": [
+            3.0,
+            11.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Desk",
+              "timecode_sec": 8.08,
+              "observation": "The employee leaves the cash desk unattended with the laptop and cash handling equipment still on the desk.",
+              "reason_for_concern": "Leaving a cash desk unattended creates a security risk for cash and equipment."
+            }
+          ],
+          "video": 29,
+          "wall_sec": 1.53,
+          "window": [
+            4.65,
+            12.65
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unauthorized_item_handling",
+              "timecode_sec": 8.3,
+              "observation": "The customer holds a small, white, cylindrical object (possibly a vape or similar device) in their hand while seated at the desk.",
+              "reason_for_concern": "This item is not part of the standard cash-handling or transaction process and warrants review to ensure it is not being used to conceal contraband or bypass security protocols."
+            }
+          ],
+          "video": 3,
+          "wall_sec": 1.92,
+          "window": [
+            6.016510500000001,
+            14.0165105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Cashier handling customer interaction without proper supervision",
+              "timecode_sec": 13.57,
+              "observation": "The cashier is interacting with a customer who is standing very close to the cash desk, potentially in a position that could allow for unauthorized access to the cash drawer or counter.",
+              "reason_for_concern": "This behavior could indicate a lack of proper supervision or security measures in place, which could lead to potential security breaches."
+            }
+          ],
+          "video": 30,
+          "wall_sec": 1.48,
+          "window": [
+            9.0,
+            17.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unusual Door Interaction",
+              "timecode_sec": 10.19,
+              "observation": "The employee is seen holding the door handle and appears to be actively opening the glass door to the adjacent office space.",
+              "reason_for_concern": "This action deviates from standard customer service behavior at a cash desk, where the door should remain closed to maintain security and focus on the transaction. It warrants review to ensure no unauthorized access or distraction is occurring."
+            }
+          ],
+          "video": 31,
+          "wall_sec": 1.97,
+          "window": [
+            7.9,
+            15.9
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unusual Approach",
+              "timecode_sec": 2.14,
+              "observation": "A person enters the room and approaches the cash desk.",
+              "reason_for_concern": "The approach is direct and unannounced, which is atypical for a standard customer service interaction."
+            }
+          ],
+          "video": 32,
+          "wall_sec": 1.78,
+          "window": [
+            1.0,
+            9.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unusual Approach",
+              "timecode_sec": 4.29,
+              "observation": "A woman enters the room and approaches the desk where a laptop and other equipment are present.",
+              "reason_for_concern": "The approach is unusual for a standard customer service interaction, warranting review to determine the nature of the visit."
+            }
+          ],
+          "video": 33,
+          "wall_sec": 1.83,
+          "window": [
+            2.0,
+            10.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Handling",
+              "timecode_sec": 12.43,
+              "observation": "The male employee leaves the cash desk area while the female employee remains seated at the desk with her hand raised toward the cash handling equipment.",
+              "reason_for_concern": "This action creates an unattended state at the cash desk, which is a significant physical security concern as it removes the direct supervision of the cash handling process."
+            }
+          ],
+          "video": 34,
+          "wall_sec": 1.81,
+          "window": [
+            9.0,
+            17.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Customer Service",
+              "timecode_sec": 30.1,
+              "observation": "A customer is seated at the desk with a bank teller, and the teller is writing on a document.",
+              "reason_for_concern": "This is ordinary customer service and does not warrant review."
+            }
+          ],
+          "video": 35,
+          "wall_sec": 1.77,
+          "window": [
+            24.3833335,
+            32.3833335
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unusual_desk_interaction",
+              "timecode_sec": 8.5,
+              "observation": "A man in a white shirt approaches the desk and places an object on the surface in front of the seated woman.",
+              "reason_for_concern": "The action of placing an object on the desk during a transaction is a standard part of the process, but the specific nature of the object and the manner of its placement warrant review to ensure it is not an attempt to conceal or manipulate the transaction."
+            }
+          ],
+          "video": 37,
+          "wall_sec": 1.93,
+          "window": [
+            3.9333335,
+            11.9333335
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unusual Approach",
+              "timecode_sec": 33.57,
+              "observation": "A man in a white shirt approaches the desk from the glass door area, leaning on the door frame and looking directly at the seated employee.",
+              "reason_for_concern": "This approach is atypical for a standard customer service interaction and warrants review to determine the nature of the visit."
+            }
+          ],
+          "video": 38,
+          "wall_sec": 1.64,
+          "window": [
+            29.0,
+            37.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Handling",
+              "timecode_sec": 35.37,
+              "observation": "A person is standing with their back to the camera, holding a stack of cash in their hands while facing away from the cash desk.",
+              "reason_for_concern": "Cash should be handled in a controlled manner, typically with the customer present or under direct supervision, to prevent theft or loss."
+            }
+          ],
+          "video": 39,
+          "wall_sec": 1.67,
+          "window": [
+            35.3665105,
+            43.3665105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Handover",
+              "timecode_sec": 61.0,
+              "observation": "A customer places cash on the counter and the teller reaches for it without a visible secure container or immediate transaction protocol.",
+              "reason_for_concern": "This action bypasses standard secure cash-handling procedures, increasing the risk of theft or loss."
+            }
+          ],
+          "video": 4,
+          "wall_sec": 1.86,
+          "window": [
+            53.0,
+            61.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "TAMPERING_WITH_SECURITY_DEVICE",
+              "timecode_sec": 13.0,
+              "observation": "A person is seen holding and manipulating a beige cloth or bag near the cash handling equipment on the desk.",
+              "reason_for_concern": "This action could be an attempt to conceal or tamper with the security device or cash handling equipment."
+            }
+          ],
+          "video": 40,
+          "wall_sec": 1.85,
+          "window": [
+            13.0,
+            21.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "unusual_item_handling",
+              "timecode_sec": 11.11,
+              "observation": "The employee is holding a small, light-colored object that appears to be a coin or a small token, which is not part of standard cash-handling procedures.",
+              "reason_for_concern": "This warrants review because handling non-cash items at the cash desk can indicate potential tampering, unauthorized items being passed, or a deviation from standard operating procedures."
+            }
+          ],
+          "video": 43,
+          "wall_sec": 1.79,
+          "window": [
+            7.6833335,
+            15.6833335
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unattended Cash Handling",
+              "timecode_sec": 12.0,
+              "observation": "The employee is holding a small stack of cash in her hands while seated at the desk, with no immediate customer interaction visible in the frame.",
+              "reason_for_concern": "Cash should be handled in a secure, supervised manner, typically within a cash drawer or on a counter, to prevent loss or theft."
+            }
+          ],
+          "video": 44,
+          "wall_sec": 1.74,
+          "window": [
+            12.0,
+            20.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [],
+          "video": 45,
+          "wall_sec": 1.21,
+          "window": [
+            12.666510500000001,
+            20.6665105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [],
+          "video": 46,
+          "wall_sec": 0.48,
+          "window": [
+            7.0,
+            15.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 64.0,
+              "observation": "The customer is holding a small, white, rectangular object (likely a card or document) in his hands while seated at the counter.",
+              "reason_for_concern": "This action warrants review because handling physical documents or cards outside of a secure, designated area (like a drop box or secure counter) increases the risk of loss, theft, or unauthorized access."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 65.14,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "Continued handling of the object outside a secure area maintains the risk associated with the previous observation."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 66.29,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "The risk of loss or unauthorized access persists as the customer continues to hold the item."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 67.43,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "The risk of loss or unauthorized access persists as the customer continues to hold the item."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 68.57,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "The risk of loss or unauthorized access persists as the customer continues to hold the item."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 69.71,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "The risk of loss or unauthorized access persists as the customer continues to hold the item."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 70.86,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "The risk of loss or unauthorized access persists as the customer continues to hold the item."
+            },
+            {
+              "name": "Unsecured Handling of Physical Documents",
+              "timecode_sec": 72.0,
+              "observation": "The customer is still holding the small, white, rectangular object in his hands.",
+              "reason_for_concern": "The risk of loss or unauthorized access persists as the customer continues to hold the item."
+            }
+          ],
+          "video": 47,
+          "wall_sec": 3.56,
+          "window": [
+            64.0,
+            72.0
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [],
+          "video": 48,
+          "wall_sec": 0.52,
+          "window": [
+            31.799999999999997,
+            39.8
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [],
+          "video": 5,
+          "wall_sec": 1.43,
+          "window": [
+            31.799999999999997,
+            39.8
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        },
+        {
+          "events": [
+            {
+              "name": "Unusual Interaction with Equipment",
+              "timecode_sec": 19.59,
+              "observation": "The employee reaches toward and touches the grey cabinet next to the desk, then appears to be manipulating something inside or on it.",
+              "reason_for_concern": "This action deviates from standard cash-handling duties and could indicate an attempt to access unauthorized items, tamper with equipment, or conceal something. It warrants review to determine intent and outcome."
+            }
+          ],
+          "video": 8,
+          "wall_sec": 1.95,
+          "window": [
+            15.016510499999999,
+            23.0165105
+          ],
+          "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+        }
+      ]
+    },
+    "cosmos8b": {
+      "completed_jobs": 0,
+      "clips": [],
+      "metrics": null,
+      "median_sec": null,
+      "p95_sec": null,
+      "incomplete_facts": 0,
+      "skipped_review_windows": 0,
+      "open_diagnostics": []
+    }
+  }
+}

@@ -1,0 +1,412 @@
+# Violation catalogue — the single source of truth for types, model definitions and normative references.
+# Type IDs and tiers follow the team catalogue (data/forte_ejiggas.pdf); a few types were added by us.
+#
+# API `type` = "<name_ru> (<id>)" (FORTE_OUTPUT_LANG=ru, default) or "<name> (<id>)" (en).
+# Tiers: A = the breach itself is visible on video; B = what is visible needs a human to check context or documents.
+# Every type cites a public act of the Republic of Kazakhstan (case FAQ 30-32); every result is a hint for a
+# human reviewer, whatever the tier.
+#
+# detect:   rules     — fact timeline + moment checks + perception (app/pipeline/rules.py), precise timecodes
+#           review    — open-ended VLM review of short windows (types listed in FORTE_REVIEW_TYPES)
+#           reference — documented and citable, not detected automatically yet (needs audio, documents or a
+#                       better model); the open-ended `other` type still catches such cases by name
+# aliases:  other names used in the labels sheet (for the scorer)
+# rule:     document = full title of the act; short = how it is cited in descriptions; url = adilet.zan.kz;
+#           reg = date, number and justice registration; about = what the act covers and why we use it;
+#           section = paragraph; summary = the requirement, close to the act's wording.
+#           All paragraphs were checked against the current texts on adilet.zan.kz on 2026-10-17.
+# why_ru:   the Russian 'why it may be a violation' used in descriptions (neutral, no legal conclusions)
+# `proposal_kinds` / `gate` only matter for review types (see analyze.py / passes_gate).
+
+docs:
+  - &D231
+    document: "Постановление Правления Национального Банка Республики Казахстан от 29 ноября 2019 года № 231 «Об утверждении Правил осуществления кассовых операций и операций по инкассации банкнот, монет и ценностей в банках второго уровня, филиалах банков-нерезидентов Республики Казахстан, Национальном операторе почты и юридических лицах, исключительной деятельностью которых является инкассация банкнот, монет и ценностей»"
+    short: "Правила кассовых операций и инкассации (пост. НБРК № 231)"
+    url: "https://adilet.zan.kz/rus/docs/V1900019680"
+    reg: "Зарегистрировано в Министерстве юстиции РК 3 декабря 2019 года № 19680; действующая редакция"
+    about: "Основной акт о кассовой дисциплине в банках: как кассир принимает, выдаёт, пересчитывает, сортирует, упаковывает и хранит наличные, как работает с сомнительными банкнотами, как проводится ревизия и инкассация. Отсюда требования к рабочему месту кассира, пересчёту в присутствии клиента, идентификации клиента, хранению денег и ключей, приёму инкассаторских сумок и личным вещам в кассовом узле."
+  - &D14
+    document: "Постановление Правления Национального Банка Республики Казахстан от 24 февраля 2020 года № 14 «Об утверждении Правил организации охраны и устройства помещений банков второго уровня, филиалов банков-нерезидентов Республики Казахстан, Национального оператора почты, юридических лиц, исключительной деятельностью которых является инкассация банкнот, монет и ценностей, и юридических лиц, осуществляющих деятельность исключительно через обменные пункты на основании лицензии Национального Банка Республики Казахстан на обменные операции с наличной иностранной валютой»"
+    short: "Правила охраны и устройства помещений банков (пост. НБРК № 14)"
+    url: "https://adilet.zan.kz/rus/docs/V2000020075"
+    reg: "Зарегистрировано в Министерстве юстиции РК 27 февраля 2020 года № 20075; действующая редакция"
+    about: "Требования к охране и устройству помещений, где работают с наличными: кассовый узел, касса, кладовая, сейфовая комната, бокс для инкассации, сигнализация и видеонаблюдение. Отсюда изоляция кассового узла, отдельный вход в кассу с дверью на замок и защита инкассации от доступа и просмотра посторонними."
+  - &D53
+    document: "Постановление Правления Агентства Республики Казахстан по регулированию и развитию финансового рынка от 3 апреля 2026 года № 53 «Об утверждении Требований к обеспечению информационной безопасности банков, филиалов банков-нерезидентов Республики Казахстан и организаций, осуществляющих отдельные виды банковских операций»"
+    short: "Требования к информационной безопасности банков (пост. АРРФР № 53)"
+    url: "https://adilet.zan.kz/rus/docs/V2600038336"
+    reg: "Зарегистрировано в Министерстве юстиции РК 6 апреля 2026 года № 38336"
+    about: "Требования регулятора к информационной безопасности банков: управление доступом, паролями и учётными записями, защита рабочих станций. Используется для рабочего компьютера, оставленного без присмотра с открытой банковской программой."
+  - &D230
+    document: "Постановление Правления Национального Банка Республики Казахстан от 29 ноября 2017 года № 230 «Об утверждении Правил определения платежности банкнот и монет национальной валюты Республики Казахстан»"
+    short: "Правила определения платежности банкнот и монет (пост. НБРК № 230)"
+    url: "https://adilet.zan.kz/rus/docs/V1700016120"
+    reg: "Зарегистрировано в Министерстве юстиции РК 26 декабря 2017 года № 16120; действующая редакция"
+    about: "Признаки, по которым банкноты и монеты тенге считаются платёжными, ветхими или неплатёжными. На него ссылаются Правила № 231 (п. 57) при проверке и сортировке банкнот; нужен для типов, связанных с проверкой подлинности и износа."
+
+types:
+  # ---------------- detected by rules ----------------
+  - id: previous_customer_cash_left_exposed
+    name: Previous customer's cash left exposed
+    name_ru: "Деньги предыдущего клиента оставлены на столе"
+    tier: A
+    detect: rules
+    aliases: [PREVIOUS_CUSTOMER_CASH_EXPOSED, MULTIPLE_CUSTOMERS_CASH_MIXED, cash_of_multiple_customers_on_workspace]
+    definition: >-
+      Cash taken from a client is left lying on the desk after the operation instead of being put away — for example
+      when the next client walks in or when the cashier walks away.
+    why: Cash already received must be kept in the designated cash storage, not left on the desk.
+    why_ru: "На рабочем месте кассира должны находиться только наличные обслуживаемого клиента, а ранее принятые деньги убираются в запирающиеся устройства хранения."
+    rule: {<<: *D231, section: "абз. 2 п. 20", summary: "На рабочем месте кассового работника находятся наличные деньги клиента. Все ранее принятые наличные хранятся в специальных устройствах на рабочем месте, закрывающихся на ключ (металлический шкаф, сейф, тележка, ящики стола, тумба)."}
+
+  - id: cash_counted_without_customer_present
+    name: Client's cash counted after the client left
+    name_ru: "Пересчёт денег клиента после его ухода"
+    tier: A
+    detect: rules
+    aliases: [CUSTOMER_ABSENT_DURING_RECEIPT_COUNT]
+    definition: >-
+      The client leaves (or turns away from the desk) while the cashier is still counting or loading the client's
+      cash into the counting machine.
+    why: Cash received from a client must be recounted in the client's presence.
+    why_ru: "Наличные клиента принимаются и пересчитываются в его присутствии."
+    rule: {<<: *D231, section: "абз. 1 п. 20", summary: "Наличные деньги принимаются и пересчитываются кассовым работником в присутствии клиента."}
+
+  - id: cashier_left_during_active_customer_service
+    name: Cashier left the workplace during service
+    name_ru: "Кассир покинул рабочее место во время обслуживания"
+    tier: A
+    detect: rules
+    aliases: [CASHIER_LEFT_DURING_SERVICE]
+    definition: >-
+      The cashier leaves the workplace (or the room) before the client's service is finished, leaving the client or
+      the client's cash behind.
+    why: The cashier may not leave the workplace until the client's service is finished.
+    why_ru: "Кассиру нельзя покидать рабочее место до окончания обслуживания клиента."
+    rule: {<<: *D231, section: "п. 22", summary: "Кассовому работнику не допускается покидать рабочее место до окончания обслуживания клиента."}
+
+  - id: customer_identification_not_observed
+    name: Client identification not observed
+    name_ru: "Идентификация клиента не наблюдалась"
+    tier: B
+    detect: rules
+    aliases: [Client_Not_Identified]
+    definition: >-
+      Before cash is accepted from or handed to a client, no identity document is seen being shown to or checked by
+      the cashier. (A digital document or a check outside the camera view is possible — a human must verify.)
+    why: The client must be identified before cash is accepted or issued.
+    why_ru: "При приёме и выдаче наличных кассир визуально идентифицирует клиента по документу. На записи этого не видно; документ мог быть показан вне кадра или в цифровом виде, поэтому нужна проверка."
+    rule: {<<: *D231, section: "пп. 1) п. 19, пп. 1) п. 31", summary: "При приёме и при выдаче наличных кассир проводит визуальную идентификацию клиента по документу, удостоверяющему личность, либо по данным, полученным через сервис цифровых документов."}
+
+  - id: possible_unauthorized_vault_access
+    name: Possible unauthorized access to the cash zone
+    name_ru: "Возможный доступ постороннего в зону кассы"
+    tier: B
+    detect: rules
+    aliases: [POSSIBLE_UNAUTHORIZED_CASH_AREA_ACCESS]
+    definition: >-
+      A person other than the cashier goes to the cashier's side of the desk, to the safe or into the part of the room
+      reserved for cash handling.
+    why: The cash unit must be isolated; outsiders must not access the protected cash area.
+    why_ru: "Кассовый узел изолирован от других помещений; присутствие другого человека на стороне кассира или у сейфа требует проверки его допуска."
+    rule: {<<: *D14, section: "п. 8, пп. 1) п. 16", summary: "Кассовый узел изолируется от других помещений одним закрывающимся служебным входом; каждая касса имеет отдельный вход с дверью, закрывающейся на замок."}
+
+  - id: collection_exposed_to_third_parties
+    name: Cash operation exposed to a third party
+    name_ru: "Кассовая операция доступна посторонним"
+    tier: B
+    detect: rules
+    aliases: [COLLECTION_VISIBLE_TO_THIRD_PARTY]
+    definition: >-
+      A third person (besides the cashier and the client being served) is present at the desk and can watch or take
+      part in the cash operation or the collection.
+    why: Outsiders must not be able to watch or access cash and collection operations.
+    why_ru: "Доступ и просмотр третьими лицами за кассовыми операциями и инкассацией должны быть ограничены."
+    rule: {<<: *D14, section: "п. 21", summary: "Для инкассации оборудуется бокс с дверью на замок либо погрузочно-разгрузочная площадка; обеспечивается ограничение доступа и просмотра третьими лицами за осуществлением инкассации."}
+
+  - id: cash_desk_access_door_left_unsecured
+    name: Cash room door left open
+    name_ru: "Дверь кассы оставлена открытой"
+    tier: B
+    detect: rules
+    aliases: [OPEN_DOOR_AT_CASH_AREA]
+    definition: >-
+      The door of the cash room is opened and left standing open while people work inside, so the room is not isolated.
+    why: Each cash desk has its own entrance with a door that locks; the cash unit must be isolated.
+    why_ru: "Касса имеет отдельный вход с дверью на замок, а кассовый узел изолируется от других помещений; открытая дверь эту изоляцию нарушает."
+    rule: {<<: *D14, section: "пп. 1) п. 16, п. 8", summary: "Каждая касса имеет отдельный вход с дверью, закрывающейся на замок; кассовый узел изолируется одним закрывающимся служебным входом."}
+
+  - id: KEY_LEFT_IN_SAFE
+    name: Key left in the safe
+    name_ru: "Ключ оставлен в сейфе"
+    tier: B
+    detect: rules
+    definition: >-
+      The cashier walks away and the key stays in the safe lock.
+    why: Keys to the cash storage devices at the workplace must be kept so that unauthorized use is excluded.
+    why_ru: "Хранение ключей от сейфа на рабочем месте должно исключать их несанкционированное использование; ключ, оставленный в замке, доступен любому, кто подойдёт к сейфу."
+    rule: {<<: *D231, section: "п. 80, п. 76", summary: "Порядок хранения ключей от специальных устройств на рабочем месте кассира (сейф, металлический шкаф, тележка, ящики стола) определяется внутренними документами банка, обеспечивающими исключение их несанкционированного использования (п. 80). Ключи от кладовой и сейфовой комнаты хранятся у лиц, ответственных за сохранность наличных (п. 76)."}
+
+  - id: BANK_DOCUMENTS_EXPOSED
+    name: Bank documents or unlocked computer left unattended
+    name_ru: "Банковские документы или незаблокированный компьютер оставлены без присмотра"
+    tier: B
+    detect: rules
+    aliases: [BANK_DOCUMENTS_LEFT, LAPTOP_LEFT_ON]
+    definition: >-
+      The cashier leaves the workplace while bank documents or folders lie on the desk or the computer still shows an
+      open banking application (not locked).
+    why: Workstations must lock and bank forms and media must be stored so that unauthorized use is excluded.
+    why_ru: "Рабочая станция должна блокироваться, а бланки и носители с банковской информацией храниться так, чтобы исключить несанкционированное использование; без присмотра они остаются доступны."
+    rule: {<<: *D53, section: "пп. 9) п. 71", summary: "При неактивности пользователя информационная система завершает сеанс или блокирует рабочую станцию (ноутбук), разблокировка только по аутентификационным данным пользователя. Бланки документов и носители с банковской защищаемой информацией относятся к ценностям (пп. 17) п. 2 Правил № 231), их хранение должно исключать несанкционированное использование (п. 80 Правил № 231)."}
+
+  - id: SAFE_LEFT_OPEN
+    name: Safe left open
+    name_ru: "Сейф оставлен открытым"
+    tier: B
+    detect: rules
+    definition: >-
+      The safe door stays open while nobody is working at it (the cashier is back at the desk or has left).
+    why: Received cash is kept in storage devices that lock with a key; an open, unattended safe does not keep it safe.
+    why_ru: "Принятые наличные хранятся в устройствах, закрывающихся на ключ; открытый сейф без присмотра не обеспечивает их сохранность."
+    rule: {<<: *D231, section: "абз. 2 п. 20, п. 80", summary: "Ранее принятые наличные хранятся в специальных устройствах на рабочем месте кассира, закрывающихся на ключ (металлический шкаф, сейф, тележка, ящики стола, тумба); порядок хранения ключей от них исключает несанкционированное использование."}
+
+  - id: COLLECTION_BAG_ACCEPTED_WITHOUT_INTEGRITY_CHECK
+    name: Collection bag accepted without inspection
+    name_ru: "Инкассаторская сумка принята без проверки"
+    tier: A
+    detect: rules
+    aliases: [COLLECTION_BAG_ACCEPTED_WITHOUT_INSPECTION]
+    definition: >-
+      A cash collector brings a collection bag and the cashier accepts it without visibly checking the bag's integrity
+      (seal) and the collector's documents.
+    why: Collection bags are accepted only after checking their integrity and the accompanying documents.
+    why_ru: "При приёме сумки от инкассаторов кассир проверяет её целостность, пломбу и препроводительный документ."
+    rule: {<<: *D231, section: "п. 24 (пп. 1), 3), 4))", summary: "Наличные от инкассаторов принимаются по препроводительному документу; кассир проверяет сведения в нём, целостность сумки и правильность её пломбирования."}
+
+  - id: PERSONAL_ITEM_IN_CASH_NODE
+    name: Personal items at the cash workplace
+    name_ru: "Личные вещи кассира в кассовом узле"
+    tier: B
+    detect: rules
+    definition: >-
+      The cashier's personal belongings — bag, outerwear, food — are put on or at the cash desk.
+    why: Employees' personal belongings, personal cash and valuables must be kept outside the cash unit.
+    why_ru: "Личные вещи, личные деньги и ценности работников хранятся вне кассового узла."
+    rule: {<<: *D231, section: "абз. 1 п. 12", summary: "Хранение личных вещей, наличных денег и ценностей работников банка осуществляется вне кассового узла."}
+
+  - id: PHONE_WITH_CAMERA_IN_CASH_NODE
+    name: Phone with a camera used in the cash unit
+    name_ru: "Смартфон с камерой в кассовом узле"
+    tier: B
+    detect: rules
+    gate: {objects: [cell phone]}
+    definition: >-
+      The cashier uses a smartphone (with a camera) at the cash desk.
+    why: Only means of communication without photo and video recording are allowed in the cash unit.
+    why_ru: "В кассовый узел можно вносить только средства связи без функции фото- и видеофиксации."
+    rule: {<<: *D231, section: "абз. 2 п. 12", summary: "В кассовый узел допускается вносить лекарства, медицинские изделия и средства связи, не имеющие функции фото- и видеофиксации."}
+
+  - id: CASH_PROCESSING_WITHOUT_CONTROLLER
+    name: Cash processed without a controller
+    name_ru: "Обработка наличных без контролирующего работника"
+    tier: A
+    detect: rules
+    aliases: [COLLECTION_CASH_RECOUNT_WITHOUT_CONTROLLER]
+    definition: >-
+      The cashier alone recounts, sorts or packs cash outside a client operation — e.g. cash taken from a collection
+      bag — with no controlling employee present.
+    why: Recounting, sorting and packing of cash are done in the presence of a controlling employee.
+    why_ru: "Пересчёт, сортировка и упаковка наличных вне операций с клиентом проводятся в присутствии контролирующего работника."
+    rule: {<<: *D231, section: "п. 42", summary: "Пересчёт, сортировка и упаковка наличных осуществляются кассовым работником в присутствии контролирующего работника, кроме операций приёма и выдачи наличных клиенту."}
+
+  # ---------------- detected by the open-ended review ----------------
+  - id: CASH_OUT_OF_VIEW
+    name: Cash handled out of camera view
+    name_ru: "Наличные вне поля зрения камеры"
+    tier: B
+    detect: review
+    proposal_kinds: [person_moving, interaction]
+    definition: >-
+      The cashier moves banknotes below the desk edge, into a pocket, sleeve, clothing or a bag, instead of keeping them
+      on the desk, in the machine or in the safe.
+    why: Bank cash stays at the workplace or in lockable storage and employees' personal cash stays outside the cash unit; banknotes put into a pocket, clothing or a bag need checking.
+    why_ru: "Деньги банка находятся на рабочем месте или в запирающихся устройствах хранения, а личные деньги работников — вне кассового узла; купюры, убранные в карман, одежду или сумку, требуют проверки."
+    rule: {<<: *D231, section: "абз. 2 п. 20, п. 12", summary: "На рабочем месте кассира находятся наличные клиента, ранее принятые наличные хранятся в устройствах, закрывающихся на ключ (п. 20); личные наличные деньги работников хранятся вне кассового узла (п. 12)."}
+
+  - id: REPLACEMENT_CASH_NOT_RECOUNTED
+    name: Replacement banknotes not recounted
+    name_ru: "Заменённые банкноты не пересчитаны"
+    tier: A
+    detect: review
+    proposal_kinds: [interaction]
+    definition: >-
+      The cashier gives some banknotes back to the client, the client hands over other banknotes instead, and the
+      cashier accepts the new banknotes without recounting or checking them.
+    why: Banknotes actually accepted must be recounted and checked, and the amount reconciled.
+    why_ru: "Фактически принятые банкноты пересчитываются полистно и проверяются на подлинность и платёжность, сумма сверяется с документом."
+    rule: {<<: *D231, section: "пп. 2), 4) п. 19", summary: "Банкноты принимаются с полистным пересчётом и проверкой подлинности и платёжности; сумма в приходном документе сверяется с фактически принятой."}
+
+  - id: other
+    name: Other visible procedural irregularity
+    name_ru: "Иное видимое нарушение порядка"
+    tier: B
+    detect: review
+    proposal_kinds: []
+    definition: >-
+      Any other clearly visible action that breaks cash-handling discipline or security and does not fit the types
+      above. Use only when the action is unambiguous.
+    why: A visible action differs from the cash-handling procedure; the reviewer determines the exact paragraph.
+    why_ru: "Видимое действие отличается от установленного порядка кассовых операций; пункт нормы определяет проверяющий."
+    rule: {<<: *D231, section: "", summary: "Общий порядок кассовых операций. Конкретный пункт для нового типа нарушения определяет проверяющий."}
+
+  # ---------------- reference: citable, not detected automatically yet ----------------
+  - id: incoming_cash_not_counted
+    name: Client's cash put away without counting
+    name_ru: "Деньги клиента убраны без пересчёта"
+    tier: A
+    detect: reference
+    definition: The cashier accepts the client's cash and puts it away without counting it.
+    why: Banknotes are accepted with sheet-by-sheet recounting and checks of authenticity and fitness.
+    why_ru: "Банкноты принимаются с полистным пересчётом и проверкой подлинности и платёжности."
+    rule: {<<: *D231, section: "пп. 2) п. 19", summary: "Банкноты принимаются с полистным пересчетом и проверкой подлинности и платежности."}
+
+  - id: outgoing_cash_not_recounted_in_customer_presence
+    name: Cash issued without recount in front of the client
+    name_ru: "Выдача наличных без пересчёта при клиенте"
+    tier: A
+    detect: reference
+    definition: The cashier hands prepared cash to the client without recounting it in the client's presence.
+    why: Issued cash is recounted in the client's presence.
+    why_ru: "Подготовленные к выдаче наличные пересчитываются в присутствии клиента."
+    rule: {<<: *D231, section: "пп. 4) п. 31", summary: "Выдаваемые наличные пересчитываются в присутствии клиента."}
+
+  - id: receipt_or_confirmation_not_handed_to_customer
+    name: No receipt handed to the client
+    name_ru: "Клиенту не выдан подтверждающий документ"
+    tier: B
+    detect: reference
+    definition: After the operation no confirming document is seen being handed to the client (an electronic receipt is possible).
+    why: The client receives a confirming document after the operation.
+    why_ru: "Клиенту выдаётся документ, подтверждающий кассовую операцию."
+    rule: {<<: *D231, section: "пп. 6) п. 19, пп. 6) п. 31", summary: "Клиенту выдается документ, подтверждающий операцию."}
+
+  - id: EMPLOYEE_PERSONAL_CASH_IN_CASH_NODE
+    name: Employee's personal cash in the cash unit
+    name_ru: "Личные деньги кассира в кассовом узле"
+    tier: B
+    detect: reference
+    definition: The cashier's personal money or wallet is visible in the cash unit.
+    why: Employees' personal cash must be kept outside the cash unit.
+    why_ru: "Личные наличные деньги работников хранятся вне кассового узла."
+    rule: {<<: *D231, section: "п. 12", summary: "Личные наличные деньги работников хранятся вне кассового узла."}
+
+  - id: MULTIPLE_RECEIPT_CASH_NOT_SEPARATED
+    name: Cash for several receipts accepted in one pile
+    name_ru: "Деньги по нескольким документам приняты одной суммой"
+    tier: B
+    detect: reference
+    definition: One client makes several deposits and the cash for them is accepted as one pile instead of separately.
+    why: Cash for each receipt document is accepted separately.
+    why_ru: "Наличные по каждому приходному кассовому документу принимаются отдельно."
+    rule: {<<: *D231, section: "п. 21", summary: "Деньги по каждому приходному кассовому документу принимаются отдельно."}
+
+  - id: DAMAGED_COLLECTION_BAG_OPENED_WITHOUT_COLLECTOR
+    name: Damaged collection bag opened without the collector
+    name_ru: "Повреждённая сумка вскрыта без инкассатора"
+    tier: A
+    detect: reference
+    definition: A damaged collection bag is opened or recounted after the collector has left.
+    why: A bag with broken integrity is opened and recounted in the presence of the collection employee.
+    why_ru: "Сумка с нарушенной целостностью вскрывается и пересчитывается в присутствии работника инкассации."
+    rule: {<<: *D231, section: "п. 25", summary: "При нарушении целостности сумка вскрывается и пересчитывается в присутствии работника инкассации."}
+
+  - id: END_OF_DAY_RECONCILIATION_WITHOUT_CONTROLLER
+    name: End-of-day reconciliation without a controller
+    name_ru: "Сверка в конце дня без контролирующего работника"
+    tier: A
+    detect: reference
+    definition: At the end of the day the cashier alone recounts / reconciles the balance, closes the safe and leaves.
+    why: At the end of the working day the cashier and the controlling employee reconcile the amounts together.
+    why_ru: "В конце рабочего дня кассовый и контролирующий работники вместе сверяют суммы."
+    rule: {<<: *D231, section: "п. 56", summary: "В конце рабочего дня кассовый и контролирующий работники совместно осуществляют сверку сумм."}
+
+  - id: CASH_RECOUNT_WITHOUT_VERIFICATION_EQUIPMENT
+    name: Cash recounted without verification equipment
+    name_ru: "Пересчёт без проверочного оборудования"
+    tier: B
+    detect: reference
+    definition: During recounting or sorting cash is handled by hand although the counting machine stands next to it.
+    why: Recounting and sorting are done on equipment that checks at least two machine-readable security features.
+    why_ru: "Пересчёт и сортировка проводятся на оборудовании, проверяющем не менее двух машиночитаемых защитных признаков банкнот."
+    rule: {<<: *D231, section: "п. 41", summary: "Пересчет и сортировка осуществляются на оборудовании с проверкой не менее двух машиночитаемых защитных признаков."}
+
+  - id: CASH_NOT_SORTED_BY_DENOMINATION
+    name: Cash not sorted by denomination
+    name_ru: "Наличные не рассортированы по номиналам"
+    tier: B
+    detect: reference
+    definition: During a separate sorting operation different denominations are clearly mixed.
+    why: Cash is sorted by denomination and degree of wear.
+    why_ru: "Наличные сортируются по номиналам и степени износа."
+    rule: {<<: *D231, section: "п. 43", summary: "Наличные сортируются по номиналам и степени износа."}
+
+  - id: CASH_NOT_SORTED_BY_CONDITION
+    name: Worn banknotes mixed with fit ones
+    name_ru: "Ветхие банкноты смешаны с годными"
+    tier: B
+    detect: reference
+    definition: Clearly damaged or worn banknotes are mixed with fit ones during sorting.
+    why: Cash is sorted by degree of wear; fitness is determined by the banknote fitness rules.
+    why_ru: "Банкноты сортируются на годные, ветхие и изымаемые из обращения; платёжность определяется по установленным признакам."
+    rule: {<<: *D230, section: "Правила в целом; также п. 43 пост. № 231", summary: "Платежность банкнот определяется по установленным признакам износа и повреждений."}
+
+  - id: SUSPICIOUS_BANKNOTE_PROCEDURE_NOT_FOLLOWED
+    name: Suspicious banknote procedure not followed
+    name_ru: "Не соблюдена процедура по сомнительной банкноте"
+    tier: B
+    detect: reference
+    definition: A banknote the cashier clearly treats as suspicious is handled without the head of the cash desk and without a report.
+    why: A report on a suspicious banknote is drawn up in the presence of the client and the head of the cash desk.
+    why_ru: "Акт о приёме сомнительных банкнот на экспертизу составляется в присутствии клиента и заведующего кассой."
+    rule: {<<: *D231, section: "п. 59", summary: "Акт составляется в присутствии клиента и заведующего кассой (замещающего лица)."}
+
+  - id: SUSPECTED_COUNTERFEIT_RETURNED_TO_CUSTOMER
+    name: Suspected counterfeit returned to the client
+    name_ru: "Банкнота с признаками подделки возвращена клиенту"
+    tier: B
+    detect: reference
+    definition: A banknote already recognised as having signs of counterfeiting is handed back to the client.
+    why: Banknotes with signs of counterfeiting are not returned to the client.
+    why_ru: "Банкноты с признаками подделки клиенту не возвращаются."
+    rule: {<<: *D231, section: "пп. 60–61", summary: "Банкноты с признаками подделки клиенту не возвращаются."}
+
+  - id: DAMAGED_BUNDLE_ISSUED_WITHOUT_RECOUNT
+    name: Damaged bundle issued without recount
+    name_ru: "Повреждённый корешок выдан без пересчёта"
+    tier: B
+    detect: reference
+    definition: A banknote bundle with damaged packaging is handed to the client without sheet-by-sheet recounting.
+    why: Banknotes from damaged bundles are issued with sheet-by-sheet recounting.
+    why_ru: "Банкноты из неполных и повреждённых корешков выдаются с полистным пересчётом."
+    rule: {<<: *D231, section: "п. 32", summary: "Банкноты из поврежденных корешков выдаются с полистным пересчетом."}
+
+  - id: DENOMINATION_EXCHANGE_BEFORE_WITHDRAWAL_COMPLETE
+    name: Denominations exchanged before the withdrawal is complete
+    name_ru: "Размен номиналов до завершения выдачи"
+    tier: B
+    detect: reference
+    definition: During a withdrawal the cashier starts exchanging denominations at the client's request before the main payout is done.
+    why: Exchange of one denomination for another is allowed only after the prepared cash has been issued.
+    why_ru: "Обмен номиналов по просьбе клиента допускается после выдачи подготовленных наличных."
+    rule: {<<: *D231, section: "п. 34", summary: "Обмен номиналов допускается после выдачи подготовленных наличных."}
+
+  - id: MACHINE_REJECTED_CASH_ACCEPTED_WITHOUT_RECHECK
+    name: Machine-rejected banknote accepted without recheck
+    name_ru: "Отбракованная машиной банкнота принята без проверки"
+    tier: B
+    detect: reference
+    definition: The counting / checking machine rejects a banknote and the cashier adds it to the accepted amount without any further check.
+    why: Accepted cash must pass checks of authenticity and fitness.
+    why_ru: "Принимаемые наличные проверяются на подлинность и платёжность."
+    rule: {<<: *D231, section: "пп. 2) п. 19, п. 57", summary: "Принимаемые деньги проходят проверку подлинности и платежности."}

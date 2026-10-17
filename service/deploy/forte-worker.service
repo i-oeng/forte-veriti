@@ -1,0 +1,15 @@
+[Unit]
+Description=Cash Desk Review - analysis worker
+After=forte-vllm.service
+
+[Service]
+WorkingDirectory=%h/forte/service
+EnvironmentFile=%h/forte/forte.env
+Environment=PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+ExecStart=%h/forte/venv-app/bin/python -m app.worker
+Restart=always
+RestartSec=3
+TimeoutStopSec=60
+
+[Install]
+WantedBy=default.target

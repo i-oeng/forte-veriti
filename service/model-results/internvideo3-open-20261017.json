@@ -1,0 +1,506 @@
+[
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 1,
+  "wall_sec": 3.07,
+  "window": [
+   18.0,
+   25.883333
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1952,
+  "video": 2,
+  "wall_sec": 1.25,
+  "window": [
+   6.0,
+   14.0
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1952,
+  "video": 3,
+  "wall_sec": 1.12,
+  "window": [
+   6.016510500000001,
+   14.0165105
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 4,
+  "wall_sec": 1.1,
+  "window": [
+   53.0,
+   61.0
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 5,
+  "wall_sec": 1.11,
+  "window": [
+   31.799999999999997,
+   39.8
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 8,
+  "wall_sec": 1.1,
+  "window": [
+   15.016510499999999,
+   23.0165105
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1950,
+  "video": 10,
+  "wall_sec": 1.12,
+  "window": [
+   3.7833335000000003,
+   11.783333500000001
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 11,
+  "wall_sec": 1.13,
+  "window": [
+   14.0,
+   22.0
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 12,
+  "wall_sec": 1.11,
+  "window": [
+   17.15,
+   25.15
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 13,
+  "wall_sec": 1.1,
+  "window": [
+   43.0,
+   51.0
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 14,
+  "wall_sec": 1.1,
+  "window": [
+   67.2665105,
+   75.2665105
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 15,
+  "wall_sec": 1.11,
+  "window": [
+   11.0,
+   19.0
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1953,
+  "video": 16,
+  "wall_sec": 1.11,
+  "window": [
+   7.3665105,
+   15.3665105
+  ],
+  "mode": "xgrammar json_schema",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1949,
+  "video": 17,
+  "wall_sec": 2.92,
+  "window": [
+   3.0,
+   11.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 18,
+  "wall_sec": 1.13,
+  "window": [
+   16.0,
+   22.55
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 19,
+  "wall_sec": 1.12,
+  "window": [
+   24.7165105,
+   32.7165105
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1948,
+  "video": 20,
+  "wall_sec": 1.1,
+  "window": [
+   1.0,
+   9.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1952,
+  "video": 21,
+  "wall_sec": 1.11,
+  "window": [
+   5.800000000000001,
+   13.8
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 22,
+  "wall_sec": 1.11,
+  "window": [
+   10.0,
+   18.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1951,
+  "video": 23,
+  "wall_sec": 1.11,
+  "window": [
+   5.133333500000001,
+   13.1333335
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1950,
+  "video": 24,
+  "wall_sec": 1.11,
+  "window": [
+   4.0,
+   12.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 25,
+  "wall_sec": 1.1,
+  "window": [
+   11.85,
+   19.85
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1951,
+  "video": 26,
+  "wall_sec": 1.1,
+  "window": [
+   5.0,
+   13.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1955,
+  "video": 27,
+  "wall_sec": 1.1,
+  "window": [
+   9.2165105,
+   17.2165105
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1949,
+  "video": 28,
+  "wall_sec": 1.11,
+  "window": [
+   3.0,
+   11.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1951,
+  "video": 29,
+  "wall_sec": 1.12,
+  "window": [
+   4.65,
+   12.65
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1955,
+  "video": 30,
+  "wall_sec": 1.12,
+  "window": [
+   9.0,
+   17.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1954,
+  "video": 31,
+  "wall_sec": 1.12,
+  "window": [
+   7.9,
+   15.9
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1948,
+  "video": 32,
+  "wall_sec": 1.12,
+  "window": [
+   1.0,
+   9.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1949,
+  "video": 33,
+  "wall_sec": 1.11,
+  "window": [
+   2.0,
+   10.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1955,
+  "video": 34,
+  "wall_sec": 1.13,
+  "window": [
+   9.0,
+   17.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 35,
+  "wall_sec": 1.11,
+  "window": [
+   24.3833335,
+   32.3833335
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1950,
+  "video": 37,
+  "wall_sec": 1.11,
+  "window": [
+   3.9333335,
+   11.9333335
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 38,
+  "wall_sec": 1.11,
+  "window": [
+   29.0,
+   37.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 39,
+  "wall_sec": 1.12,
+  "window": [
+   35.3665105,
+   43.3665105
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 40,
+  "wall_sec": 1.14,
+  "window": [
+   13.0,
+   21.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1953,
+  "video": 43,
+  "wall_sec": 1.1,
+  "window": [
+   7.6833335,
+   15.6833335
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 44,
+  "wall_sec": 1.11,
+  "window": [
+   12.0,
+   20.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 45,
+  "wall_sec": 1.12,
+  "window": [
+   12.666510500000001,
+   20.6665105
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1953,
+  "video": 46,
+  "wall_sec": 1.12,
+  "window": [
+   7.0,
+   15.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 47,
+  "wall_sec": 1.11,
+  "window": [
+   64.0,
+   72.0
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ },
+ {
+  "events": [],
+  "input_tokens": 1956,
+  "video": 48,
+  "wall_sec": 1.13,
+  "window": [
+   31.799999999999997,
+   39.8
+  ],
+  "mode": "xgrammar json_schema; input=images",
+  "caveat": "Diagnostic on known footage with oracle event windows; not unseen-type accuracy."
+ }
+]

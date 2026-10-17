@@ -1,0 +1,72 @@
+{
+ "run": "v11",
+ "clips": 42,
+ "types": {
+  "CASH_OUT_OF_VIEW": {
+   "clips": 10,
+   "violation_clips": 5,
+   "type_in_labels": 0,
+   "confidence": 0.5
+  },
+  "cash_desk_access_door_left_unsecured": {
+   "clips": 11,
+   "violation_clips": 8,
+   "type_in_labels": 5,
+   "confidence": 0.69
+  },
+  "BANK_DOCUMENTS_EXPOSED": {
+   "clips": 6,
+   "violation_clips": 6,
+   "type_in_labels": 2,
+   "confidence": 0.88
+  },
+  "customer_identification_not_observed": {
+   "clips": 3,
+   "violation_clips": 1,
+   "type_in_labels": 1,
+   "confidence": 0.4
+  },
+  "PERSONAL_ITEM_IN_CASH_NODE": {
+   "clips": 3,
+   "violation_clips": 2,
+   "type_in_labels": 2,
+   "confidence": 0.6
+  },
+  "COLLECTION_BAG_ACCEPTED_WITHOUT_INTEGRITY_CHECK": {
+   "clips": 1,
+   "violation_clips": 1,
+   "type_in_labels": 1,
+   "confidence": 0.67
+  },
+  "collection_exposed_to_third_parties": {
+   "clips": 1,
+   "violation_clips": 1,
+   "type_in_labels": 1,
+   "confidence": 0.67
+  },
+  "previous_customer_cash_left_exposed": {
+   "clips": 6,
+   "violation_clips": 6,
+   "type_in_labels": 5,
+   "confidence": 0.88
+  },
+  "SAFE_LEFT_OPEN": {
+   "clips": 1,
+   "violation_clips": 1,
+   "type_in_labels": 0,
+   "confidence": 0.67
+  },
+  "cash_counted_without_customer_present": {
+   "clips": 3,
+   "violation_clips": 2,
+   "type_in_labels": 1,
+   "confidence": 0.6
+  },
+  "CASH_PROCESSING_WITHOUT_CONTROLLER": {
+   "clips": 1,
+   "violation_clips": 1,
+   "type_in_labels": 0,
+   "confidence": 0.67
+  }
+ }
+}

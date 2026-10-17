@@ -1,0 +1,13 @@
+[Unit]
+Description=Cash Desk Review - HTTP API and web UI
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/forte/service
+EnvironmentFile=%h/forte/forte.env
+ExecStart=%h/forte/venv-app/bin/uvicorn app.api:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=* --timeout-keep-alive 30
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

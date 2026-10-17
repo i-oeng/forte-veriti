@@ -1,0 +1,12 @@
+{
+  "method": "Execute the actual select function in isolation with synthetic confirmed candidates; no VLM accuracy claim.",
+  "confirmed_short_novel_event": {
+    "expected_accepted": 1,
+    "actual_accepted": 0
+  },
+  "different_nearby_novel_event_names": {
+    "expected_accepted": 2,
+    "actual_accepted": 1
+  },
+  "production_modified": false
+}
