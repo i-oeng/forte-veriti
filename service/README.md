@@ -1,4 +1,4 @@
-# Cash Desk Review — local AI service for cash-discipline violations in CCTV video
+# Cash Desk Review: local AI service for cash-discipline violations in CCTV video
 
 Upload a cashier video (`.mov`, `.mp4`, `.avi`, `.mkv`, `.ts`, `.mts`, `.m2ts`, `.mpg`, `.mpeg`, `.m4v`, `.webm`)
 and get a verdict (`violation` / `no_violation`). Each possible violation comes with:

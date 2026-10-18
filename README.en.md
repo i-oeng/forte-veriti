@@ -1,4 +1,4 @@
-# ForteBank Datathon 26 — cash-desk violation detection
+# ForteBank Datathon 26: cash-desk violation detection
 
 [Русский](README.md) | **English**
 
