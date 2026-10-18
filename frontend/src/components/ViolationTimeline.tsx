@@ -18,19 +18,21 @@ export default function ViolationTimeline({
   onSeek,
 }: Props) {
   if (
-    !Number.isFinite(duration) ||
-    duration <= 0
+    duration <= 0 ||
+    violations.length === 0
   ) {
     return null;
   }
 
   return (
-    <div className="timeline">
-      <div className="timeline-header">
-        <span>Временная шкала событий</span>
+    <div className="timeline-card">
+      <div className="timeline-top">
+        <strong>
+          События
+        </strong>
 
         <span>
-          {violations.length} событий
+          {violations.length}
         </span>
       </div>
 
@@ -55,17 +57,17 @@ export default function ViolationTimeline({
                 style={{
                   left: `${position}%`,
                 }}
+                title={`${
+                  violation.title ??
+                  violation.type
+                } · ${formatTime(
+                  violation.timecode_sec
+                )}`}
                 onClick={() =>
                   onSeek(
                     violation.timecode_sec
                   )
                 }
-                title={`${
-                  violation.title ||
-                  violation.type
-                } — ${formatTime(
-                  violation.timecode_sec
-                )}`}
               >
                 <span />
               </button>
@@ -74,47 +76,13 @@ export default function ViolationTimeline({
         )}
       </div>
 
-      <div className="timeline-times">
+      <div className="timeline-scale">
         <span>00:00</span>
-
-        <span>
-          {formatTime(
-            duration / 2
-          )}
-        </span>
 
         <span>
           {formatTime(duration)}
         </span>
       </div>
-
-      {violations.length > 0 && (
-        <div className="timeline-events">
-          {violations.map(
-            (violation, index) => (
-              <button
-                key={`${violation.type}-event-${index}`}
-                onClick={() =>
-                  onSeek(
-                    violation.timecode_sec
-                  )
-                }
-              >
-                <strong>
-                  {formatTime(
-                    violation.timecode_sec
-                  )}
-                </strong>
-
-                <span>
-                  {violation.title ||
-                    violation.type}
-                </span>
-              </button>
-            )
-          )}
-        </div>
-      )}
     </div>
   );
 }

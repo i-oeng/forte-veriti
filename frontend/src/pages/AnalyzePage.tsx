@@ -1,315 +1,861 @@
-import { useEffect, useRef, useState } from "react";
-import { analyzeVideo, getAnalysisJob, mediaUrl } from "../api/client";
-import { analyzeBatch, previewUrl, type HistoryItem } from "../api/history";
-import HistoryPanel from "../components/HistoryPanel";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock3,
+  LoaderCircle,
+  MoreHorizontal,
+  Trash2,
+  Video as VideoIcon,
+} from "lucide-react";
+
+import {
+  analyzeVideo,
+  getAnalysisJob,
+} from "../api/client";
+
 import UploadPanel from "../components/UploadPanel";
-import ViolationTimeline from "../components/ViolationTimeline";
-import type { AnalysisJob } from "../types/analysis";
-import { base64ToImageSrc } from "../utils/image";
-import { formatTime } from "../utils/time";
+import ComplianceVideoPlayer from "../components/ComplianceVideoPlayer";
+
+import type {
+  AnalysisJob,
+} from "../types/analysis";
+
+import {
+  formatTime,
+} from "../utils/time";
+
+import {
+  addEvidenceFrames,
+} from "../utils/evidence";
+
+import {
+  base64ToImageSrc,
+} from "../utils/image";
+
+type TaskStatus =
+  | "uploading"
+  | "processing"
+  | "done"
+  | "failed";
 
 type VideoTask = {
   localId: string;
-  name: string;
-  file?: File;
+  file: File;
   videoUrl: string;
   jobId?: string;
-  status: "uploading" | "processing" | "done" | "failed";
+  status: TaskStatus;
   result?: AnalysisJob;
   error?: string;
 };
 
 function createLocalId() {
-  return crypto.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+  if (
+    typeof crypto !== "undefined" &&
+    crypto.randomUUID
+  ) {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random()}`;
 }
 
 export default function AnalyzePage() {
-  const [tasks, setTasks] = useState<VideoTask[]>([]);
-  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
-  const [videoDuration, setVideoDuration] = useState(0);
-  const [historyVersion, setHistoryVersion] = useState(0);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const mounted = useRef(true);
-  const cancelled = useRef(new Set<string>());
-  const timers = useRef(new Map<string, number>());
-  const objectUrls = useRef(new Map<string, string>());
-  const activeTask = tasks.find((task) => task.localId === activeTaskId);
+  const [tasks, setTasks] =
+    useState<VideoTask[]>([]);
+
+  const [
+    activeTaskId,
+    setActiveTaskId,
+  ] =
+    useState<string | null>(null);
+
+
+  const videoRef =
+    useRef<HTMLVideoElement | null>(
+      null
+    );
+
+  const tasksRef =
+    useRef<VideoTask[]>([]);
+
+  const cancelledTasksRef =
+    useRef<Set<string>>(
+      new Set()
+    );
 
   useEffect(() => {
-    mounted.current = true;
-    const pendingTimers = timers.current;
-    const urls = objectUrls.current;
+    tasksRef.current = tasks;
+  }, [tasks]);
+
+  useEffect(() => {
     return () => {
-      mounted.current = false;
-      pendingTimers.forEach((timer) => window.clearTimeout(timer));
-      pendingTimers.clear();
-      urls.forEach((url) => URL.revokeObjectURL(url));
-      urls.clear();
+      tasksRef.current.forEach(
+        (task) => {
+          URL.revokeObjectURL(
+            task.videoUrl
+          );
+        }
+      );
     };
   }, []);
 
-  function isActive(localId: string) {
-    return mounted.current && !cancelled.current.has(localId);
+  const activeTask =
+    useMemo(() => {
+      return (
+        tasks.find(
+          (task) =>
+            task.localId ===
+            activeTaskId
+        ) ?? null
+      );
+    }, [
+      tasks,
+      activeTaskId,
+    ]);
+
+
+  function updateTask(
+    localId: string,
+    patch: Partial<VideoTask>
+  ) {
+    setTasks((current) =>
+      current.map((task) =>
+        task.localId === localId
+          ? {
+              ...task,
+              ...patch,
+            }
+          : task
+      )
+    );
   }
 
-  function updateTask(localId: string, patch: Partial<VideoTask>) {
-    if (!isActive(localId)) return;
-    setTasks((current) => current.map((task) =>
-      task.localId === localId ? { ...task, ...patch } : task));
-  }
-
-  async function pollJob(localId: string, jobId: string) {
-    if (!isActive(localId)) return;
-    timers.current.delete(localId);
-    try {
-      const job = await getAnalysisJob(jobId);
-      if (!isActive(localId)) return;
-      updateTask(localId, {
-        status: job.status,
-        result: job,
-        ...(job.status === "done" ? { videoUrl: previewUrl(jobId) } : {}),
-        error: job.status === "failed" ? job.error || "Ошибка обработки видео" : undefined,
-      });
-      if (job.status === "processing") {
-        timers.current.set(localId, window.setTimeout(() => void pollJob(localId, jobId), 1500));
-      } else {
-        setHistoryVersion((version) => version + 1);
-      }
-    } catch (error) {
-      updateTask(localId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "Ошибка получения результата",
-      });
-    }
-  }
-
-  async function processUploads(newTasks: VideoTask[], files: File[]) {
-    try {
-      // Batch results preserve file order, including individually rejected videos.
-      const jobs = files.length > 1
-        ? (await analyzeBatch(files)).jobs
-        : [{ ...(await analyzeVideo(files[0])), status: "processing" as const, error: undefined }];
-      if (!mounted.current) return;
-      setHistoryVersion((version) => version + 1);
-      newTasks.forEach((task, index) => {
-        if (!isActive(task.localId)) return;
-        const job = jobs[index];
-        if (!job?.job_id || job.status === "rejected") {
-          updateTask(task.localId, { status: "failed", error: job?.error || "Видео не принято сервером" });
-          return;
-        }
-        updateTask(task.localId, { jobId: job.job_id, status: "processing" });
-        void pollJob(task.localId, job.job_id);
-      });
-    } catch (error) {
-      newTasks.forEach((task) => updateTask(task.localId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "Ошибка загрузки видео",
-      }));
-    }
-  }
-
-  function handleUpload(files: File[]) {
-    if (!files.length) return;
-    const newTasks: VideoTask[] = files.map((file) => {
-      const localId = createLocalId();
-      const videoUrl = URL.createObjectURL(file);
-      objectUrls.current.set(localId, videoUrl);
-      return { localId, name: file.name, file, videoUrl, status: "uploading" };
-    });
-    setTasks((current) => [...current, ...newTasks]);
-    setActiveTaskId((current) => current ?? newTasks[0].localId);
-    void processUploads(newTasks, files);
-  }
-
-  function openFromHistory(item: HistoryItem) {
-    const existing = tasks.find((task) => task.jobId === item.job_id);
-    if (existing) {
-      setActiveTaskId(existing.localId);
-      if (existing.status === "failed" && item.status !== "failed") {
-        updateTask(existing.localId, { status: "processing", error: undefined });
-        void pollJob(existing.localId, item.job_id);
-      }
+  async function pollJob(
+    localId: string,
+    jobId: string,
+    file: File
+  ) {
+    if (
+      cancelledTasksRef.current.has(
+        localId
+      )
+    ) {
       return;
     }
-    const localId = createLocalId();
-    setTasks((current) => [...current, {
-      localId, name: item.filename, videoUrl: previewUrl(item.job_id),
-      jobId: item.job_id, status: "processing",
-    }]);
-    setActiveTaskId(localId);
-    void pollJob(localId, item.job_id);
+
+    try {
+      const job =
+        await getAnalysisJob(jobId);
+
+      if (
+        cancelledTasksRef.current.has(
+          localId
+        )
+      ) {
+        return;
+      }
+
+      if (
+        job.status ===
+        "processing"
+      ) {
+        updateTask(localId, {
+          status: "processing",
+          result: job,
+        });
+
+        window.setTimeout(
+          () =>
+            void pollJob(
+              localId,
+              jobId,
+              file
+            ),
+          1500
+        );
+
+        return;
+      }
+
+      if (
+        job.status === "done"
+      ) {
+        let finalJob = job;
+
+        try {
+          finalJob =
+            await addEvidenceFrames(
+              file,
+              job
+            );
+        } catch (error) {
+          console.warn(
+            "Evidence generation failed",
+            error
+          );
+        }
+
+        updateTask(localId, {
+          status: "done",
+          result: finalJob,
+        });
+
+        return;
+      }
+
+      updateTask(localId, {
+        status: "failed",
+        result: job,
+        error:
+          job.error ??
+          "Ошибка обработки",
+      });
+    } catch (error) {
+      console.error(error);
+
+      updateTask(localId, {
+        status: "failed",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Ошибка обработки",
+      });
+    }
   }
 
-  function releaseTask(task: VideoTask) {
-    cancelled.current.add(task.localId);
-    window.clearTimeout(timers.current.get(task.localId));
-    timers.current.delete(task.localId);
-    const url = objectUrls.current.get(task.localId);
-    if (url) URL.revokeObjectURL(url);
-    objectUrls.current.delete(task.localId);
+  async function processTask(
+    task: VideoTask
+  ) {
+    try {
+      const response =
+        await analyzeVideo(
+          task.file
+        );
+
+      if (
+        cancelledTasksRef.current.has(
+          task.localId
+        )
+      ) {
+        return;
+      }
+
+      updateTask(task.localId, {
+        jobId:
+          response.job_id,
+        status:
+          "processing",
+      });
+
+      await pollJob(
+        task.localId,
+        response.job_id,
+        task.file
+      );
+    } catch (error) {
+      updateTask(task.localId, {
+        status: "failed",
+
+        error:
+          error instanceof Error
+            ? error.message
+            : "Ошибка загрузки",
+      });
+    }
   }
 
-  function removeTask(localId: string) {
-    const task = tasks.find((item) => item.localId === localId);
-    if (task) releaseTask(task);
-    const remaining = tasks.filter((item) => item.localId !== localId);
-    setTasks((current) => current.filter((item) => item.localId !== localId));
-    setActiveTaskId((current) => current === localId ? remaining[0]?.localId ?? null : current);
+  function handleUpload(
+    files: File[]
+  ) {
+    const newTasks:
+      VideoTask[] =
+      files.map((file) => ({
+        localId:
+          createLocalId(),
+
+        file,
+
+        videoUrl:
+          URL.createObjectURL(
+            file
+          ),
+
+        status:
+          "uploading",
+      }));
+
+    setTasks((current) => [
+      ...current,
+      ...newTasks,
+    ]);
+
+    if (
+      !activeTaskId &&
+      newTasks.length > 0
+    ) {
+      setActiveTaskId(
+        newTasks[0].localId
+      );
+    }
+
+    newTasks.forEach(
+      (task) => {
+        void processTask(task);
+      }
+    );
+  }
+
+  function removeTask(
+    localId: string
+  ) {
+    cancelledTasksRef.current.add(
+      localId
+    );
+
+    const task =
+      tasks.find(
+        (item) =>
+          item.localId ===
+          localId
+      );
+
+    if (task) {
+      URL.revokeObjectURL(
+        task.videoUrl
+      );
+    }
+
+    const remaining =
+      tasks.filter(
+        (item) =>
+          item.localId !==
+          localId
+      );
+
+    setTasks(remaining);
+
+    if (
+      activeTaskId ===
+      localId
+    ) {
+      setActiveTaskId(
+        remaining[0]
+          ?.localId ?? null
+      );
+    }
   }
 
   function clearAll() {
-    tasks.forEach(releaseTask);
+    tasks.forEach((task) => {
+      cancelledTasksRef.current.add(
+        task.localId
+      );
+
+      URL.revokeObjectURL(
+        task.videoUrl
+      );
+    });
+
     setTasks([]);
     setActiveTaskId(null);
   }
 
-  function seekTo(seconds: number) {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = seconds;
-    void videoRef.current.play().catch(() => {});
+  function seekTo(
+    seconds: number
+  ) {
+    if (!videoRef.current) {
+      return;
+    }
+
+    videoRef.current.currentTime =
+      seconds;
+
+    void videoRef.current
+      .play()
+      .catch(() => {});
   }
 
-  const completedCount = tasks.filter((task) => task.status === "done").length;
-  const processingCount = tasks.filter((task) => ["processing", "uploading"].includes(task.status)).length;
-  const progress = Math.round(Math.min(1, Math.max(0, activeTask?.result?.job?.progress ?? 0)) * 100);
-
   return (
-    <main className="container">
-      <header className="header">
-        <div className="logo">F</div>
-        <div><h1>Forte Compliance AI</h1><p>Контроль кассовой дисциплины</p></div>
-      </header>
-      <section className="hero">
-        <h2>Анализ кассовых операций</h2>
-        <p>Загружайте несколько видеозаписей. Каждая запись анализируется независимо.</p>
-      </section>
-      <UploadPanel onUpload={handleUpload} />
-      <HistoryPanel onOpen={openFromHistory} refreshKey={historyVersion} />
+    <div className="app">
+      <header className="topbar">
+  <div className="brand">
+    <span className="brand-primary">
+      FORTE
+    </span>
 
-      {tasks.length > 0 && <>
-        <section className="batch-summary" aria-label="Статус проверок">
-          <div><span>Всего видео</span><strong>{tasks.length}</strong></div>
-          <div><span>Обрабатывается</span><strong>{processingCount}</strong></div>
-          <div><span>Завершено</span><strong>{completedCount}</strong></div>
-          <button onClick={clearAll} title="Результаты останутся в истории; обработка продолжится">Очистить список</button>
+    <span className="brand-secondary">
+      VER
+      <span className="brand-accent">
+        IT
+      </span>
+      I
+    </span>
+  </div>
+      </header>
+
+      <main className="main">
+
+        <section
+          className={`top-layout ${
+            !activeTask
+              ? "top-layout-single"
+              : ""
+          }`}
+        >
+          <UploadPanel
+            onUpload={
+              handleUpload
+            }
+          />
+
+          {activeTask && (
+    <ComplianceVideoPlayer
+      videoUrl={
+        activeTask.result?.preview_url ??
+        activeTask.videoUrl
+      }
+      videoRef={
+        videoRef
+      }
+      violations={
+        activeTask.status ===
+          "done"
+          ? activeTask.result
+              ?.violations ?? []
+          : []
+      }
+    />
+          )}
         </section>
-        <div className="multi-layout">
-          <aside className="task-list" aria-label="Видео">
-            <div className="task-list-title"><span>Видео</span><span>{tasks.length}</span></div>
-            {tasks.map((task) => <button
-              key={task.localId}
-              className={`task-card ${activeTaskId === task.localId ? "task-card-active" : ""}`}
-              aria-pressed={activeTaskId === task.localId}
-              onClick={() => setActiveTaskId(task.localId)}
-            >
-              <div className="task-card-main">
-                <strong title={task.name}>{task.name}</strong>
-                {task.file && <small>{(task.file.size / 1024 / 1024).toFixed(1)} МБ</small>}
-              </div>
-              <TaskStatusBadge task={task} />
-              {task.status === "done" && <div className="task-result-small">
-                {task.result?.verdict === "violation"
-                  ? `⚠ ${task.result.violations?.length ?? 0} событий`
-                  : "Нарушение не обнаружено"}
-              </div>}
-            </button>)}
-          </aside>
-          <section className="selected-task" aria-label="Результат проверки">
-            {activeTask && <>
-              <div className="selected-task-header">
-                <div><small>Текущее видео</small><h2>{activeTask.name}</h2></div>
-                <button className="remove-button" onClick={() => removeTask(activeTask.localId)}
-                  title="Результат останется в истории; обработка продолжится">Убрать из списка</button>
-              </div>
-              <div className="analysis-grid">
-                <div>
-                  <div className="video-panel">
-                    <video key={activeTask.localId} ref={videoRef} src={activeTask.videoUrl}
-                      controls playsInline preload="metadata" onLoadStart={() => setVideoDuration(0)}
-                      onLoadedMetadata={(event) => setVideoDuration(event.currentTarget.duration)} />
-                  </div>
-                  {activeTask.status === "done" && activeTask.result && <ViolationTimeline
-                    duration={videoDuration} violations={activeTask.result.violations ?? []} onSeek={seekTo} />}
+
+        {tasks.length > 0 && (
+          <section className="bottom-layout">
+            <div className="panel uploads-panel">
+              <div className="panel-title">
+                <div className="title-with-count">
+                  <h2>
+                    Загруженные видео
+                  </h2>
+
+                  <span>
+                    {
+                      tasks.length
+                    }
+                  </span>
                 </div>
-                <div className="results">
-                  {(activeTask.status === "uploading" || activeTask.status === "processing") &&
-                    <div className="processing" role="status">
-                      <div className="spinner" aria-hidden="true" />
-                      <h3>{activeTask.status === "uploading" ? "Загружаем видео…" : "Анализируем видео…"}</h3>
-                      {activeTask.status === "processing" && <>
-                        <p>{activeTask.result?.job?.stage || "Ожидает обработки"} · {progress}%</p>
-                        <progress value={progress} max={100} aria-label="Прогресс анализа" />
-                        {!!activeTask.result?.job?.queue_position &&
-                          <p>Место в очереди: {activeTask.result.job.queue_position}</p>}
-                      </>}
-                      <p>Другие загруженные видео продолжают обрабатываться параллельно.</p>
-                    </div>}
-                  {activeTask.status === "failed" && <div className="error" role="alert">
-                    <strong>Ошибка</strong><p>{activeTask.error}</p>
-                  </div>}
-                  {activeTask.status === "done" && activeTask.result &&
-                    <ResultView result={activeTask.result} onSeek={seekTo} />}
-                </div>
+
+                <button
+                  className="icon-button"
+                  onClick={clearAll}
+                  title="Очистить"
+                >
+                  <Trash2
+                    size={18}
+                  />
+                </button>
               </div>
-            </>}
+
+              <div className="task-list">
+                {tasks.map(
+                  (task) => (
+                    <TaskRow
+                      key={
+                        task.localId
+                      }
+                      task={
+                        task
+                      }
+                      active={
+                        task.localId ===
+                        activeTaskId
+                      }
+                      onClick={() =>
+                        setActiveTaskId(
+                          task.localId
+                        )
+                      }
+                      onRemove={() =>
+                        removeTask(
+                          task.localId
+                        )
+                      }
+                    />
+                  )
+                )}
+              </div>
+            </div>
+
+            <div className="panel result-panel">
+              {activeTask && (
+                <ResultPanel
+                  task={
+                    activeTask
+                  }
+                  onSeek={
+                    seekTo
+                  }
+                />
+              )}
+            </div>
           </section>
-        </div>
-      </>}
-    </main>
+        )}
+      </main>
+    </div>
   );
 }
 
-function TaskStatusBadge({ task }: { task: VideoTask }) {
-  const label = task.status === "uploading" ? "Загрузка"
-    : task.status === "processing" ? "Анализ"
-    : task.status === "failed" ? "Ошибка"
-    : task.result?.verdict === "violation" ? "Требует проверки" : "Готово";
-  const style = task.status === "uploading" || task.status === "processing" ? "processing"
-    : task.status === "failed" ? "failed"
-    : task.result?.verdict === "violation" ? "warning" : "done";
-  return <span className={`task-status status-${style}`}>{label}</span>;
+function TaskRow({
+  task,
+  active,
+  onClick,
+  onRemove,
+}: {
+  task: VideoTask;
+  active: boolean;
+  onClick: () => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div
+      className={`task-row ${
+        active
+          ? "task-row-active"
+          : ""
+      }`}
+      onClick={onClick}
+    >
+      <TaskPreview
+        task={task}
+      />
+
+      <div className="task-name">
+        {task.file.name}
+      </div>
+
+      <StatusBadge
+        task={task}
+      />
+
+      <button
+        className="task-menu"
+        onClick={(event) => {
+          event.stopPropagation();
+          onRemove();
+        }}
+        title="Удалить"
+      >
+        <MoreHorizontal
+          size={20}
+        />
+      </button>
+    </div>
+  );
 }
 
-function ResultView({ result, onSeek }: { result: AnalysisJob; onSeek: (seconds: number) => void }) {
-  const violations = result.violations ?? [];
-  const hasViolations = result.verdict === "violation";
-  return <>
-    <div className={`verdict ${hasViolations ? "violation" : "success"}`} role="status">
-      <h2>{hasViolations ? "Обнаружены признаки возможных нарушений" : "Нарушение не обнаружено"}</h2>
-      {hasViolations && <p>Найдено событий: {violations.length}</p>}
+function TaskPreview({
+  task,
+}: {
+  task: VideoTask;
+}) {
+  const evidence =
+    task.result?.violations?.[0]
+      ?.evidence_frames?.[0];
+
+  if (evidence) {
+    return (
+      <img
+        className="task-thumbnail"
+        src={base64ToImageSrc(
+          evidence.image_base64
+        )}
+        alt=""
+      />
+    );
+  }
+
+  return (
+    <div className="task-thumbnail task-thumbnail-empty">
+      <VideoIcon
+        size={22}
+      />
     </div>
-    {violations.map((violation, index) => <div className="violation-card" key={`${violation.type}-${index}`}>
-      <div className="violation-header">
-        <button onClick={() => onSeek(violation.timecode_sec)}>▶ {formatTime(violation.timecode_sec)}</button>
-        {violation.confidence != null && <span>{Math.round(violation.confidence * 100)}%</span>}
+  );
+}
+
+function StatusBadge({
+  task,
+}: {
+  task: VideoTask;
+}) {
+  if (
+    task.status ===
+      "uploading" ||
+    task.status ===
+      "processing"
+  ) {
+    return (
+      <div className="status status-analysis">
+        <LoaderCircle
+          className="rotate"
+          size={16}
+        />
+
+        Анализ
       </div>
-      <h3>{violation.title || violation.type}</h3>
-      <p>{violation.description}</p>
-      {(violation.law || violation.law_short || violation.rule) && <div className="law">
-        {(violation.law || violation.law_short) && <strong>
-          {violation.law_url
-            ? <a href={violation.law_url} target="_blank" rel="noopener noreferrer">
-              {violation.law_short || violation.law}</a>
-            : violation.law_short || violation.law}
-        </strong>}
-        {violation.rule_section && <strong>{violation.rule_section}</strong>}
-        {violation.rule && <span>{violation.rule}</span>}
-        {violation.law_about && <p>{violation.law_about}</p>}
-      </div>}
-      {!!violation.evidence_frames?.length && <div className="evidence-section">
-        <div className="evidence-heading">Кадры-доказательства</div>
-        <div className="evidence-grid">
-          {violation.evidence_frames.map((frame, frameIndex) => <button key={frameIndex}
-            className="evidence-frame" onClick={() => onSeek(frame.timestamp_sec)}>
-            <img src={base64ToImageSrc(frame.image_base64)} loading="lazy"
-              alt={`Кадр в ${formatTime(frame.timestamp_sec)}: ${violation.title || violation.type}`} />
-            <span>▶ {formatTime(frame.timestamp_sec)}</span>
-          </button>)}
+    );
+  }
+
+  if (
+    task.status ===
+    "failed"
+  ) {
+    return (
+      <div className="status status-error">
+        <AlertCircle
+          size={16}
+        />
+
+        Ошибка
+      </div>
+    );
+  }
+
+  const violations =
+    task.result
+      ?.violations?.length ??
+    0;
+
+  if (violations > 0) {
+    return (
+      <div className="status status-analysis">
+        <AlertCircle
+          size={16}
+        />
+
+        {violations}
+      </div>
+    );
+  }
+
+  return (
+    <div className="status status-done">
+      <CheckCircle2
+        size={16}
+      />
+
+      Готово
+    </div>
+  );
+}
+
+function ResultPanel({
+  task,
+  onSeek,
+}: {
+  task: VideoTask;
+  onSeek: (
+    seconds: number
+  ) => void;
+}) {
+  if (
+    task.status ===
+      "uploading" ||
+    task.status ===
+      "processing"
+  ) {
+    return (
+      <div className="center-state">
+        <LoaderCircle
+          className="rotate"
+          size={34}
+        />
+
+        <strong>
+          Анализ
+        </strong>
+      </div>
+    );
+  }
+
+  if (
+    task.status === "failed"
+  ) {
+    return (
+      <div className="center-state error-state">
+        <AlertCircle
+          size={34}
+        />
+
+        <strong>
+          Ошибка
+        </strong>
+
+        {task.error && (
+          <span>
+            {task.error}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  const result =
+    task.result;
+
+  if (!result) {
+    return null;
+  }
+
+  const violations =
+    result.violations ?? [];
+
+  const hasViolations =
+    violations.length > 0;
+
+  return (
+    <>
+      <div className="result-header">
+        <h2>
+          {task.file.name}
+        </h2>
+
+        <StatusBadge
+          task={task}
+        />
+      </div>
+
+      <div
+        className={`verdict-box ${
+          hasViolations
+            ? "verdict-warning"
+            : "verdict-success"
+        }`}
+      >
+        {hasViolations ? (
+          <AlertCircle
+            size={20}
+          />
+        ) : (
+          <CheckCircle2
+            size={20}
+          />
+        )}
+
+        <strong>
+          {hasViolations
+            ? "Найдены признаки нарушений"
+            : "Нарушений не обнаружено"}
+        </strong>
+      </div>
+
+      {violations.length > 0 && (
+        <div className="violations">
+          {violations.map(
+            (
+              violation,
+              index
+            ) => (
+              <article
+                className="violation-item"
+                key={`${violation.type}-${index}`}
+              >
+                <div className="violation-heading">
+                  <div className="violation-index">
+                    {index + 1}
+                  </div>
+
+                  <h3>
+                    {violation.title ??
+                      violation.type}
+                  </h3>
+
+                  <button
+                    className="time-button"
+                    onClick={() =>
+                      onSeek(
+                        violation.timecode_sec
+                      )
+                    }
+                  >
+                    <Clock3
+                      size={15}
+                    />
+
+                    {formatTime(
+                      violation.timecode_sec
+                    )}
+                  </button>
+                </div>
+
+                <p>
+                  {
+                    violation.description
+                  }
+                </p>
+
+                {(violation.rule ||
+                  violation.law) && (
+                  <div className="rule">
+                    {violation.rule}
+
+                    {violation.rule &&
+                      violation.law &&
+                      " · "}
+
+                    {violation.law}
+                  </div>
+                )}
+
+                {violation.evidence_frames &&
+                  violation.evidence_frames
+                    .length >
+                    0 && (
+                    <div className="evidence-grid">
+                      {violation.evidence_frames.map(
+                        (
+                          frame,
+                          frameIndex
+                        ) => (
+                          <button
+                            className="evidence"
+                            key={
+                              frameIndex
+                            }
+                            onClick={() =>
+                              onSeek(
+                                frame.timestamp_sec
+                              )
+                            }
+                          >
+                            <img
+                              src={base64ToImageSrc(
+                                frame.image_base64
+                              )}
+                              alt=""
+                            />
+
+                            <span>
+                              {formatTime(
+                                frame.timestamp_sec
+                              )}
+                            </span>
+                          </button>
+                        )
+                      )}
+                    </div>
+                  )}
+              </article>
+            )
+          )}
         </div>
-      </div>}
-      {violation.clip_url && <a className="clip-link" href={mediaUrl(violation.clip_url)}
-        target="_blank" rel="noopener noreferrer">Открыть фрагмент события ↗</a>}
-    </div>)}
-  </>;
+      )}
+    </>
+  );
 }

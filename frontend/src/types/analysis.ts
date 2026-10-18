@@ -7,6 +7,7 @@ export type EvidenceFrame = {
   image_base64: string;
 };
 
+
 export type Violation = {
   // fields from the case specification (section 10)
   type: string;
@@ -49,8 +50,11 @@ export type JobProgress = {
 export type AnalysisJob = {
   job_id: string;
   status: JobStatus;
+
   verdict?: Verdict;
   violations?: Violation[];
+
+  preview_url?: string;
+
   error?: string;
-  job?: JobProgress;
 };

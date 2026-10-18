@@ -6,74 +6,113 @@ import {
 import type {
   ChangeEvent,
   DragEvent,
+  KeyboardEvent,
+  MouseEvent,
 } from "react";
+
+import {
+  CloudUpload,
+} from "lucide-react";
 
 type Props = {
   onUpload: (files: File[]) => void;
-  disabled?: boolean;
 };
 
 export default function UploadPanel({
   onUpload,
-  disabled = false,
 }: Props) {
   const inputRef =
     useRef<HTMLInputElement | null>(null);
 
-  const [dragging, setDragging] =
-    useState(false);
+  const dragCounter =
+    useRef(0);
 
-  function validateFiles(
-    files: File[]
-  ): File[] {
-    const validFiles =
-      files.filter((file) => {
-        const name =
-          file.name.toLowerCase();
+  const [
+    isDragging,
+    setIsDragging,
+  ] = useState(false);
 
-        return (
-          name.endsWith(".mov") ||
-          name.endsWith(".mp4")
-        );
-      });
+  function openFilePicker() {
+    inputRef.current?.click();
+  }
 
-    if (
-      validFiles.length !==
-      files.length
-    ) {
+  const SUPPORTED_EXTENSIONS = [
+    ".mov",
+    ".mp4",
+    ".avi",
+    ".mkv",
+    ".ts",
+    ".mts",
+    ".m2ts",
+    ".mpg",
+    ".mpeg",
+  ];
+
+   function processFiles(files: File[]) {
+      const valid = files.filter((file) => {
+      const name = file.name.toLowerCase();
+
+      return SUPPORTED_EXTENSIONS.some(
+        (extension) =>
+          name.endsWith(extension)
+      );
+    });
+
+    if (valid.length !== files.length) {
       alert(
-        "Некоторые файлы были пропущены. Разрешены только .mov и .mp4."
+        "Поддерживаются MP4, MOV, AVI, MKV, TS, MTS, M2TS, MPG и MPEG."
       );
     }
 
-    return validFiles;
-  }
-
-  function handleFiles(
-    files: File[]
-  ) {
-    const valid =
-      validateFiles(files);
-
-    if (valid.length === 0) {
-      return;
+    if (valid.length > 0) {
+      onUpload(valid);
     }
-
-    onUpload(valid);
   }
 
   function handleChange(
     event: ChangeEvent<HTMLInputElement>
   ) {
-    const files = Array.from(
-      event.target.files ?? []
+    processFiles(
+      Array.from(
+        event.target.files ?? []
+      )
     );
 
-    handleFiles(files);
-
-    // Позволяет повторно выбрать
-    // тот же файл
     event.target.value = "";
+  }
+
+  function handleDragEnter(
+    event: DragEvent<HTMLDivElement>
+  ) {
+    event.preventDefault();
+
+    dragCounter.current += 1;
+
+    setIsDragging(true);
+  }
+
+  function handleDragOver(
+    event: DragEvent<HTMLDivElement>
+  ) {
+    event.preventDefault();
+
+    event.dataTransfer.dropEffect =
+      "copy";
+  }
+
+  function handleDragLeave(
+    event: DragEvent<HTMLDivElement>
+  ) {
+    event.preventDefault();
+
+    dragCounter.current -= 1;
+
+    if (
+      dragCounter.current <= 0
+    ) {
+      dragCounter.current = 0;
+      setIsDragging(false);
+    }
   }
 
   function handleDrop(
@@ -81,77 +120,105 @@ export default function UploadPanel({
   ) {
     event.preventDefault();
 
-    setDragging(false);
+    dragCounter.current = 0;
+    setIsDragging(false);
 
-    if (disabled) {
-      return;
+    const files =
+      Array.from(
+        event.dataTransfer.files
+      );
+
+    processFiles(files);
+  }
+
+  function handleKeyDown(
+    event: KeyboardEvent<HTMLDivElement>
+  ) {
+    if (
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
+      event.preventDefault();
+
+      openFilePicker();
     }
+  }
 
-    const files = Array.from(
-      event.dataTransfer.files
-    );
+  function handleButtonClick(
+    event: MouseEvent<HTMLButtonElement>
+  ) {
+    event.stopPropagation();
 
-    handleFiles(files);
+    openFilePicker();
   }
 
   return (
     <div
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      aria-label="Загрузить одно или несколько видео"
-      aria-disabled={disabled}
-      onKeyDown={(event) => {
-        if (!disabled && (event.key === "Enter" || event.key === " ")) {
-          event.preventDefault();
-          inputRef.current?.click();
-        }
-      }}
-      className={`upload ${
-        dragging
-          ? "upload-dragging"
+      className={`upload-card ${
+        isDragging
+          ? "upload-card-active"
           : ""
       }`}
-      onClick={() => {
-        if (!disabled) {
-          inputRef.current?.click();
-        }
-      }}
-      onDragOver={(event) => {
-        event.preventDefault();
-
-        if (!disabled) {
-          setDragging(true);
-        }
-      }}
-      onDragLeave={() =>
-        setDragging(false)
+      role="button"
+      tabIndex={0}
+      onClick={
+        openFilePicker
       }
-      onDrop={handleDrop}
+      onKeyDown={
+        handleKeyDown
+      }
+      onDragEnter={
+        handleDragEnter
+      }
+      onDragOver={
+        handleDragOver
+      }
+      onDragLeave={
+        handleDragLeave
+      }
+      onDrop={
+        handleDrop
+      }
     >
       <input
         ref={inputRef}
         type="file"
         hidden
-        disabled={disabled}
         multiple
-        accept=".mov,.mp4,video/quicktime,video/mp4"
-        onChange={handleChange}
+  accept=".mov,.mp4,.avi,.mkv,.ts,.mts,.m2ts,.mpg,.mpeg,video/*"
+        onChange={
+          handleChange
+        }
       />
 
-      <div className="upload-icon">
-        ↑
-      </div>
+      <CloudUpload
+        className="upload-main-icon"
+        size={48}
+        strokeWidth={1.7}
+      />
 
-      <h2>Загрузить видео</h2>
+      <button
+        className="primary-button"
+        type="button"
+        onClick={
+          handleButtonClick
+        }
+      >
+        <CloudUpload
+          size={21}
+          strokeWidth={2}
+        />
 
-      <p>
-        Выберите одно или несколько
-        видео для параллельного анализа
-      </p>
+        Выбрать файлы
+      </button>
 
-      <small>
-        MOV / MP4
-      </small>
+  <div className="format-row">
+    <span>MP4</span>
+    <span>MOV</span>
+    <span>AVI</span>
+    <span>MKV</span>
+    <span>TS</span>
+  </div>
     </div>
   );
 }
