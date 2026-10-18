@@ -1,13 +1,16 @@
-# ForteBank Datathon 26 — cash-desk violation detection
+# ForteBank Datathon 26 — выявление нарушений в работе кассира
 
-A self-hosted AI service that reviews cashier CCTV video and reports cash-handling and security violations: a verdict
-(`violation` / `no_violation`), and for each finding its type, timecode, a description with the rule it may break,
-and 1–3 evidence frames. Everything runs on the team's own GPU servers with open-source models; no cloud AI services,
-no audio, no face recognition.
+**Русский** | [English](README.en.md)
 
-**Live service:** https://forteveriti.tail8331b7.ts.net/ (web UI)
-**Jury API:** `https://forteveriti.tail8331b7.ts.net/api/v1/...` with header `X-API-Key` (the key is sent to the jury
-separately and is not in this repository).
+ИИ-сервис, который работает на собственных серверах команды, анализирует записи камер видеонаблюдения в кассе
+и выявляет нарушения при работе с наличными и несоблюдение требований безопасности. Сервис выдаёт вердикт
+(`violation` / `no_violation`), а для каждого нарушения — тип, таймкод, описание с указанием правила, которое
+могло быть нарушено, и 1–3 подтверждающих кадра. Используются модели с открытым исходным кодом на собственных
+GPU-серверах команды; облачные ИИ-сервисы, звук и распознавание лиц не используются.
+
+**Работающий сервис:** https://forteveriti.tail8331b7.ts.net/ (веб-интерфейс)
+**API для жюри:** `https://forteveriti.tail8331b7.ts.net/api/v1/...` с заголовком `X-API-Key` (ключ передаётся жюри
+отдельно и не хранится в этом репозитории).
 
 ```bash
 curl -X POST https://forteveriti.tail8331b7.ts.net/api/v1/analyze -H "X-API-Key: <key>" -F "file=@video_017.mov"
@@ -17,59 +20,65 @@ curl https://forteveriti.tail8331b7.ts.net/api/v1/jobs/3f2a9c1e0b7d -H "X-API-Ke
 #   "description": ..., "evidence_frames": [{"timestamp_sec": ..., "image_base64": "/9j/..."}]}]}
 ```
 
-## Documents
+## Документация
 
-| Document | Contents |
+| Документ | Содержание |
 |---|---|
 | [`service/SUBMISSION_RU.md`](service/SUBMISSION_RU.md) | **Описание решения для жюри** (на русском): адреса, инструкция, архитектура и модели, нормативные источники, результаты, ограничения, план развития |
-| [`service/README.md`](service/README.md) | Architecture, API, operation and deployment (English) |
-| [`service/MODEL_RESULTS.md`](service/MODEL_RESULTS.md) | Model comparison: why Qwen3.5-4B inside the pipeline, the neutral VLM-only test of 8 models |
-| [`frontend/BACKEND_INTEGRATION.md`](frontend/BACKEND_INTEGRATION.md) | Web UI ↔ backend contract |
+| [`service/README.md`](service/README.md) | Архитектура, API, эксплуатация и развёртывание (на английском) |
+| [`service/MODEL_RESULTS.md`](service/MODEL_RESULTS.md) | Сравнение моделей: почему в конвейере используется Qwen3.5-4B, нейтральный тест 8 VLM без остального конвейера |
+| [`frontend/BACKEND_INTEGRATION.md`](frontend/BACKEND_INTEGRATION.md) | Контракт взаимодействия веб-интерфейса и бэкенда |
 
-## How it works (short)
+## Как это работает
 
-1. Any common video format is normalised to MP4 with ffmpeg.
-2. RF-DETR (Apache-2.0) finds people as body boxes and objects (phones, bags, cups); ByteTrack tracks people.
-3. A small VLM (Qwen3.5-4B AWQ, Apache-2.0, served by vLLM) locates the safe, door and desk in each video and answers
-   narrow factual questions about sampled frames; close-up checks at key moments (departures, entries, handovers).
-4. A pixel-based door check and fixed rules turn these facts into findings; an open-ended review looks for cash
-   handled out of view and other violations; findings are verified, mapped to the bank's catalogue (`service/app/catalog.yaml`,
-   32 types with paragraphs of Kazakhstan regulations) and reported in Russian with evidence frames.
-5. A second, larger VLM (Qwen3.5-27B AWQ) reviews the whole clip with the bank's catalogue: it vetoes noisy findings
-   when it sees no violation and adds the 15 catalogue types the small pipeline has no detector for, plus violations
-   named outside the catalogue, at low confidence. If it is unreachable, the result of steps 1–4 stands.
+1. Видео в любом распространённом формате преобразуется в MP4 с помощью ffmpeg.
+2. RF-DETR (Apache-2.0) обнаруживает людей и предметы (телефоны, сумки, чашки), выделяя их ограничивающими рамками;
+   ByteTrack отслеживает перемещения людей.
+3. Небольшая визуально-языковая модель (VLM) Qwen3.5-4B AWQ (Apache-2.0, работает через vLLM) определяет положение
+   сейфа, двери и стола в каждом видео и отвечает на конкретные вопросы о выбранных кадрах. В ключевые моменты
+   (уход, вход, передача предметов) выполняются проверки увеличенных фрагментов.
+4. Проверка двери по пикселям и фиксированные правила преобразуют эти факты в находки. Дополнительный анализ
+   без заранее заданного списка событий ищет действия с наличными вне поля зрения и другие нарушения. Находки
+   проверяются, сопоставляются с каталогом банка (`service/app/catalog.yaml`, 32 типа со ссылками на пункты
+   нормативных актов Казахстана) и описываются на русском языке с подтверждающими кадрами.
+5. Вторая, более крупная VLM (Qwen3.5-27B AWQ) просматривает весь ролик с учётом каталога банка: снимает находки,
+   склонные к ложным срабатываниям, если не видит нарушения, и добавляет находки по 15 типам каталога, для которых
+   у лёгкого конвейера нет детекторов, а также нарушения вне каталога — с низкой уверенностью. Если модель
+   недоступна, сохраняется результат шагов 1–4.
 
-Measured on the 42 labelled clips (40 unique videos; 22 with a violation, 20 clean): **21 of 22 violations found,
-10 false alarms, 73.8 % verdict accuracy**, timecode median error 1.2 s, every clip under 181 s (limit 300 s). The
-pipeline deliberately prefers false alarms to misses. All 32 catalogue types cite a Kazakhstan regulation and paragraph.
+На 42 размеченных роликах (40 уникальных видео; 22 с нарушением, 20 без) измерено: **найдено 21 из 22 нарушений,
+10 ложных срабатываний, точность вердикта 73,8 %**. Медианная ошибка таймкода — 1,2 с, каждый ролик обработан
+менее чем за 181 с (лимит — 300 с). Конвейер сознательно допускает больше ложных тревог, чтобы уменьшить число
+пропусков. Все 32 типа каталога содержат ссылку на нормативный акт Казахстана и его пункт.
 
-## Deployment modes (both fully local)
+## Режимы развёртывания (оба полностью локальные)
 
-| Mode | Hardware | Models | Status |
+| Режим | Оборудование | Модели | Состояние |
 |---|---|---|---|
-| Lite | one GPU with 8 GB | Qwen3.5-4B + RF-DETR + rules (17 catalogue types) | v11: 76.2 %, 1 miss, 9 false alarms |
-| **Full** | one GPU with 48 GB, or 8 + 24 GB | Lite + Qwen3.5-27B as a second checker (all 32 types + unseen) | **live** (v12): 73.8 %, 1 miss, 10 false alarms |
+| Лёгкий (Lite) | один GPU с 8 ГБ видеопамяти | Qwen3.5-4B + RF-DETR + правила (17 типов каталога) | v11: 76,2 %, 1 пропуск, 9 ложных срабатываний |
+| **Полный (Full)** | один GPU с 48 ГБ или два GPU с 8 и 24 ГБ | Лёгкий режим + Qwen3.5-27B для второй проверки (все 32 типа и новые типы вне каталога) | **работает сейчас** (v12): 73,8 %, 1 пропуск, 10 ложных срабатываний |
 
-The full mode is switched on with `FORTE_SECOND_VLM_URL` / `FORTE_SECOND_VLM_KEY`; without them the service runs the
-lite mode. The next step is per-finding "propose and verify" (see `service/SUBMISSION_RU.md`, §8).
+Полный режим включается настройками `FORTE_SECOND_VLM_URL` / `FORTE_SECOND_VLM_KEY`; без них сервис работает
+в лёгком режиме. Следующий шаг — подход «предложи и проверь» для каждой находки (см. `service/SUBMISSION_RU.md`, §8).
 
-## Repository layout
+## Структура репозитория
 
 ```
-service/            backend + ML pipeline (FastAPI API, SQLite job queue, worker)
-  app/              API, worker, pipeline (perception, facts, rules, door, review, evidence), violation catalogue
-  deploy/           systemd units, nginx config, setup script, requirements, env template
-  scripts/          evaluation, calibration, end-to-end checks, model comparison tools
-  model-results/    raw results of the model comparison
-  web/              built-in review page
-frontend/           React + TypeScript + Vite web UI (upload, batch, history, evidence, timeline, rule links)
+service/            бэкенд и ML-конвейер (API на FastAPI, очередь заданий SQLite, обработчик)
+  app/              API, обработчик, конвейер (обнаружение объектов, факты, правила, дверь, проверка, кадры), каталог нарушений
+  deploy/           службы systemd, конфигурация nginx, скрипт установки, зависимости, шаблон переменных окружения
+  scripts/          оценка качества, калибровка, сквозные проверки, инструменты сравнения моделей
+  model-results/    исходные результаты сравнения моделей
+  web/              встроенная страница просмотра результатов
+frontend/           веб-интерфейс на React + TypeScript + Vite (загрузка, пакетная обработка, история, кадры, шкала времени, ссылки на правила)
 ```
 
-Datasets and test videos are not included (the organisers' data may not be published).
+Датасеты и тестовые видео не включены: данные организаторов нельзя публиковать.
 
-## Run it
+## Запуск
 
-Requirements: Linux, NVIDIA GPU with 8 GB+ VRAM, ffmpeg, Python 3.12, Node 22. `service/deploy/setup_server.sh`
-creates the virtualenvs, downloads the open-source weights and generates an API key in `forte.env`; the systemd units
-and nginx config are in `service/deploy/` (see `service/README.md`). Frontend: `cd frontend && npm ci && npm run build`, then serve
-`dist/` with `service/deploy/nginx-forte.conf`.
+Требования: Linux, GPU NVIDIA с видеопамятью от 8 ГБ, ffmpeg, Python 3.12, Node 22. Скрипт
+`service/deploy/setup_server.sh` создаёт виртуальные окружения, загружает веса моделей с открытым исходным кодом
+и генерирует API-ключ в `forte.env`. Файлы служб systemd и конфигурация nginx находятся в `service/deploy/`
+(см. `service/README.md`). Для сборки фронтенда выполните `cd frontend && npm ci && npm run build`, затем настройте
+раздачу `dist/` с помощью `service/deploy/nginx-forte.conf`.
