@@ -165,3 +165,13 @@ The design to build next is **propose and verify per finding**: the 4B pipeline 
 detector crops and a type-specific question (precision). For unseen types the larger model reviews key moments from
 the tracker with the catalogue and re-checks anything named outside it with a differently worded question (the 4B's
 own open-ended signal fires on 13 of 20 clean clips, so it should not vote). Both models fit one local 48 GB GPU.
+
+### v12 — both models live (measured, 18 October, 05:30)
+
+Lite pipeline (Qwen3.5-4B on the 8 GB GPU) plus Qwen3.5-27B AWQ as the second model on a separate 24 GB GPU
+(team server, HTTPS with an API key; if it is unreachable the job falls back to the lite result). Full 42-clip
+evaluation through the live API: **73.8 % (TP21 FP10 TN10 FN1)**, missed Х-1; timecode median 1.2 s; slowest 181 s;
+the 27B answered in 15–33 s per video. Its veto removed false alarms on Х-16 and Х-35; its added type "cash recounted
+without verification equipment" found Х-44 (missed by v11) but also fired on clean Х-27, Х-43 and Х-45. Х-1 depends on
+a recall-mode finding that does not appear in every run. Catalogue coverage: 17 types by the lite pipeline, the other
+15 and unseen types only via the 27B (2 of the 15 observed on these clips; unseen types not measurable here).

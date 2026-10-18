@@ -124,6 +124,28 @@ class Pending:
         return self._out if not self._thread.is_alive() else {"error": "timeout"}
 
 
+def _norm(name: str) -> str:
+    return " ".join("".join(c if c.isalnum() else " " for c in name.lower()).split())
+
+
+def additions(opinion: dict | None, catalog: Catalog, duration: float) -> list[dict]:
+    """Findings the lite pipeline cannot produce itself: catalogue types it has no detector for ("reference") and
+    violations named outside the catalogue. Types the pipeline detects are left to its own rules."""
+    if not opinion or opinion.get("verdict") != "violation":
+        return []
+    by_name = {_norm(t.name): t for t in catalog.types}
+    out = []
+    for e in opinion.get("events") or []:
+        name = (e.get("name") or "").strip()
+        t = by_name.get(_norm(name))
+        if not name or (t is not None and t.detect != "reference"):
+            continue
+        out.append({"type": t.id if t else "other", "other_name": "" if t else name,
+                    "t": min(max(float(e.get("timecode_sec") or 0.0), 0.0), duration),
+                    "observation": (e.get("observation") or "").strip()})
+    return out
+
+
 def apply(accepted: list, opinion: dict | None) -> tuple[list, list[str]]:
     """Drop noisy-type findings when the larger model saw no violation; returns (kept, dropped types)."""
     if not opinion or opinion.get("verdict") != "no_violation":

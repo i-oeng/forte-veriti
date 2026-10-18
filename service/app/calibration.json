@@ -1,7 +1,13 @@
 {
- "run": "v11",
+ "run": "v12",
  "clips": 42,
  "types": {
+  "BANK_DOCUMENTS_EXPOSED": {
+   "clips": 6,
+   "violation_clips": 6,
+   "type_in_labels": 2,
+   "confidence": 0.88
+  },
   "CASH_OUT_OF_VIEW": {
    "clips": 10,
    "violation_clips": 5,
@@ -14,23 +20,11 @@
    "type_in_labels": 5,
    "confidence": 0.69
   },
-  "BANK_DOCUMENTS_EXPOSED": {
-   "clips": 6,
-   "violation_clips": 6,
-   "type_in_labels": 2,
-   "confidence": 0.88
-  },
-  "customer_identification_not_observed": {
-   "clips": 3,
-   "violation_clips": 1,
-   "type_in_labels": 1,
-   "confidence": 0.4
-  },
-  "PERSONAL_ITEM_IN_CASH_NODE": {
-   "clips": 3,
-   "violation_clips": 2,
-   "type_in_labels": 2,
-   "confidence": 0.6
+  "CASH_RECOUNT_WITHOUT_VERIFICATION_EQUIPMENT": {
+   "clips": 7,
+   "violation_clips": 3,
+   "type_in_labels": 0,
+   "confidence": 0.44
   },
   "COLLECTION_BAG_ACCEPTED_WITHOUT_INTEGRITY_CHECK": {
    "clips": 1,
@@ -45,10 +39,16 @@
    "confidence": 0.67
   },
   "previous_customer_cash_left_exposed": {
-   "clips": 6,
-   "violation_clips": 6,
-   "type_in_labels": 5,
-   "confidence": 0.88
+   "clips": 5,
+   "violation_clips": 5,
+   "type_in_labels": 4,
+   "confidence": 0.86
+  },
+  "customer_identification_not_observed": {
+   "clips": 2,
+   "violation_clips": 1,
+   "type_in_labels": 1,
+   "confidence": 0.5
   },
   "SAFE_LEFT_OPEN": {
    "clips": 1,
@@ -57,16 +57,22 @@
    "confidence": 0.67
   },
   "cash_counted_without_customer_present": {
-   "clips": 3,
-   "violation_clips": 2,
+   "clips": 1,
+   "violation_clips": 1,
    "type_in_labels": 1,
-   "confidence": 0.6
+   "confidence": 0.67
   },
   "CASH_PROCESSING_WITHOUT_CONTROLLER": {
    "clips": 1,
    "violation_clips": 1,
    "type_in_labels": 0,
    "confidence": 0.67
+  },
+  "PERSONAL_ITEM_IN_CASH_NODE": {
+   "clips": 2,
+   "violation_clips": 2,
+   "type_in_labels": 2,
+   "confidence": 0.75
   }
  }
 }

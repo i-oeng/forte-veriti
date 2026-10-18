@@ -2,7 +2,8 @@
 
 A self-hosted AI service that reviews cashier CCTV video and reports cash-handling and security violations: a verdict
 (`violation` / `no_violation`), and for each finding its type, timecode, a description with the rule it may break,
-and 1–3 evidence frames. Everything runs on our own GPU server; no cloud AI services, no audio, no face recognition.
+and 1–3 evidence frames. Everything runs on the team's own GPU servers with open-source models; no cloud AI services,
+no audio, no face recognition.
 
 **Live service:** https://forteveriti.tail8331b7.ts.net/ (web UI)
 **Jury API:** `https://forteveriti.tail8331b7.ts.net/api/v1/...` with header `X-API-Key` (the key is sent to the jury
@@ -34,19 +35,23 @@ curl https://forteveriti.tail8331b7.ts.net/api/v1/jobs/3f2a9c1e0b7d -H "X-API-Ke
 4. A pixel-based door check and fixed rules turn these facts into findings; an open-ended review looks for cash
    handled out of view and other violations; findings are verified, mapped to the bank's catalogue (`service/app/catalog.yaml`,
    32 types with paragraphs of Kazakhstan regulations) and reported in Russian with evidence frames.
+5. A second, larger VLM (Qwen3.5-27B AWQ) reviews the whole clip with the bank's catalogue: it vetoes noisy findings
+   when it sees no violation and adds the 15 catalogue types the small pipeline has no detector for, plus violations
+   named outside the catalogue, at low confidence. If it is unreachable, the result of steps 1–4 stands.
 
-Measured on the 42 labelled clips (22 with a violation, 20 clean): **76.2 % verdict accuracy, 21 of 22 violations
-found, 9 false alarms**, every clip under 181 s (limit 300 s). The pipeline deliberately prefers false alarms to misses.
+Measured on the 42 labelled clips (40 unique videos; 22 with a violation, 20 clean): **21 of 22 violations found,
+10 false alarms, 73.8 % verdict accuracy**, timecode median error 1.2 s, every clip under 181 s (limit 300 s). The
+pipeline deliberately prefers false alarms to misses. All 32 catalogue types cite a Kazakhstan regulation and paragraph.
 
 ## Deployment modes (both fully local)
 
 | Mode | Hardware | Models | Status |
 |---|---|---|---|
-| **Lite** | one GPU with 8 GB | Qwen3.5-4B + RF-DETR + rules | **submitted, live** (76.2 %, 1 miss, 9 false alarms on 42 clips) |
-| Full | one GPU with 48 GB (or 8 + 24 GB) | Lite + Qwen3.5-27B as a second checker | experimental, off by default (`FORTE_SECOND_VLM_URL`); offline estimate 1 miss, 6 false alarms |
+| Lite | one GPU with 8 GB | Qwen3.5-4B + RF-DETR + rules (17 catalogue types) | v11: 76.2 %, 1 miss, 9 false alarms |
+| **Full** | one GPU with 48 GB, or 8 + 24 GB | Lite + Qwen3.5-27B as a second checker (all 32 types + unseen) | **live** (v12): 73.8 %, 1 miss, 10 false alarms |
 
-The full mode is not used for judging: the team has no local 24 GB+ GPU, and test videos may not be passed to third
-parties (a rented GPU). The next step for it is per-finding "propose and verify" (see `service/SUBMISSION_RU.md`, §8).
+The full mode is switched on with `FORTE_SECOND_VLM_URL` / `FORTE_SECOND_VLM_KEY`; without them the service runs the
+lite mode. The next step is per-finding "propose and verify" (see `service/SUBMISSION_RU.md`, §8).
 
 ## Repository layout
 

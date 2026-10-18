@@ -35,6 +35,7 @@ CLUSTER_GAP = 4.0        # same-type findings closer than this are one event
 SNAP_RADIUS = config.fenv("FORTE_SNAP_RADIUS", 2.5)       # max shift when snapping to a perception event (0 = off)
 EVIDENCE_RESERVE = 25.0  # seconds kept for evidence extraction before the deadline
 SAME_TYPE_GAP = 15.0     # seconds within which a second finding of the same type is treated as the same event
+SECOND_SCORE = 0.55      # findings added by the larger model: types the lite pipeline cannot check, so low confidence
 VERIFY = config.fenv("FORTE_VERIFY", 1) > 0
 CANDIDATE_THRESHOLD = config.fenv("FORTE_CANDIDATE_THRESHOLD", 0.35)
 MAX_VERIFY = int(config.fenv("FORTE_MAX_VERIFY", 6))
@@ -432,6 +433,13 @@ def analyze(src: Path, out_dir: Path, deadline: float, progress: ProgressFn = la
 
     opinion = second.result(deadline - EVIDENCE_RESERVE - time.time())
     accepted, dropped_by_second = second_opinion.apply(accepted, opinion)
+    added_by_second = []
+    for x in second_opinion.additions(opinion, catalog, duration):   # types the lite pipeline cannot detect
+        if any(a.type == x["type"] and abs(a.t - x["t"]) < SAME_TYPE_GAP for a in accepted + added_by_second):
+            continue
+        added_by_second.append(Event(x["type"], x["t"], SECOND_SCORE, [x["observation"]], ["second_vlm"], [],
+                                     t_vlm=round(x["t"], 2), other_name=x["other_name"], verified="second"))
+    accepted = sorted(accepted + added_by_second, key=lambda e: e.t)
 
     progress("extracting evidence", 0.86)
     russian = config.OUTPUT_LANG == "ru"
@@ -454,7 +462,10 @@ def analyze(src: Path, out_dir: Path, deadline: float, progress: ProgressFn = la
         why = _sentence(vt.why_ru if russian else vt.why)
         rule_text = vt.rule.as_text()
         caveat = ""
-        if _unconfirmed(ev):
+        if "second_vlm" in ev.sources:
+            caveat = ("Найдено второй, более крупной моделью при просмотре всего ролика; время указано приблизительно."
+                      if russian else "Found by the second, larger model reviewing the whole clip; the time is approximate.")
+        elif _unconfirmed(ev):
             caveat = ("Повторная автоматическая проверка это не подтвердила; показано, потому что пропуск нарушения "
                       "хуже ложной тревоги." if russian else
                       "A second automatic check did not confirm this; shown because a missed violation is worse "
@@ -494,6 +505,7 @@ def analyze(src: Path, out_dir: Path, deadline: float, progress: ProgressFn = la
         "departures": departures, "entries": entries, "cits": cits, "id_checks": id_checks,
         "model": config.VLM_MODEL, "detector": config.DETECTOR,
         "second_opinion": opinion, "dropped_by_second_opinion": dropped_by_second,
+        "added_by_second_opinion": [{"type": e.type, "t": e.t, "other_name": e.other_name} for e in added_by_second],
     }
     (out_dir / "debug.json").write_text(json.dumps(debug, ensure_ascii=False, default=float), encoding="utf-8")
     return {
