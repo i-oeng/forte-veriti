@@ -4,6 +4,7 @@ from __future__ import annotations
 import base64
 import json
 import logging
+import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -308,8 +309,11 @@ def _moment_checks(frames, layout, laptop_box, departures, entry_times, cit_time
     return departures, entries, cits, id_checks
 
 
+_EMPHASIS = re.compile(r"(?<!\w)(\*\*|__|\*|_)(?=\S)(.+?)(?<=\S)\1(?!\w)")
+
+
 def _sentence(s: str) -> str:
-    s = s.strip()
+    s = _EMPHASIS.sub(r"\2", s).strip()   # model text sometimes carries Markdown emphasis: «_Кассир_» -> «Кассир»
     return s if not s or s[-1] in ".!?" else s + "."
 
 
